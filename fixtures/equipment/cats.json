@@ -1,0 +1,74 @@
+[
+    {
+        "model": "equipment.categories",
+        "pk": 6,
+        "fields": {
+            "name": "�� ������������",
+            "slug": "vse-oborudovanie"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 7,
+        "fields": {
+            "name": "�����",
+            "slug": "stoly"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 8,
+        "fields": {
+            "name": "������",
+            "slug": "stulya"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 9,
+        "fields": {
+            "name": "������������ ����",
+            "slug": "kompyuternye-myshi"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 10,
+        "fields": {
+            "name": "������",
+            "slug": "kresla"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 11,
+        "fields": {
+            "name": "����������",
+            "slug": "klaviatury"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 12,
+        "fields": {
+            "name": "��������",
+            "slug": "monitory"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 13,
+        "fields": {
+            "name": "��������� �����",
+            "slug": "sistemnye-bloki"
+        }
+    },
+    {
+        "model": "equipment.categories",
+        "pk": 14,
+        "fields": {
+            "name": "������",
+            "slug": "kamery"
+        }
+    }
+]
