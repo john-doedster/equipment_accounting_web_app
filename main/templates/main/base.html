@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="{% static "deps/css/bootstrap/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "deps/css/my_css.css" %}">
     <!-- Стиль footer-a для главной страницы -->
-    {% block css %}{% endblock css %}
+    {% block css %}
+    {% endblock css %}
     <!-- Favicons for different platforms -->
     <link rel="apple-touch-icon" sizes="180x180" href="{% static "deps/favicon/apple-touch-icon.png" %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static "deps/favicon/favicon-32x32.png" %}">
@@ -37,13 +38,12 @@
                                 Информация
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item  text-white" href="#">Доставка и оплата</a></li>
                                 <li><a class="dropdown-item  text-white" href="#">Контактная информация</a></li>
                                 <li><a class="dropdown-item  text-white" href="{% url "main:about" %}">Про нас</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  text-white" href="carts/cart.html">Корзина</a>
+                            <a class="nav-link  text-white" href="carts/cart.html">Таблица</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="users/login.html">Войти</a>
@@ -54,7 +54,7 @@
                                 Мой профиль
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item  text-white" href="carts/cart.html">Корзина</a></li>
+                                <li><a class="dropdown-item  text-white" href="carts/cart.html">Таблица</a></li>
                                 <li><a class="dropdown-item  text-white" href="users/profile.html">Личный кабинет</a>
                                 </li>
                                 <li><a class="dropdown-item  text-white" href="{% url "admin:index" %}">Админ панель</a></li>
@@ -91,16 +91,16 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <!-- Значек корзины, вызывает модальное окно -->
+                <!-- Значек таблицы, вызывает модальное окно -->
                 <div>
                     <button type="button" class="btn btn-dark btn-secondary d-flex" id="modalButton"
                         aria-expanded="false">
-                        <img class="mx-1" src="{% static "deps/icons/basket2-fill.svg" %}" alt="Catalog Icon" width="24"
-                            height="24">
+                        <img class="mx-1" src="{% static "deps/icons/table_icon.png" %}" alt="Catalog Icon" width="42"
+                            height="42">
                         <span id="goods-in-cart-count">0</span>
                     </button>
                 </div>
-                <!-- Разметка модального окна корзины -->
+                <!-- Разметка модального окна таблицы -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-scrollable">
@@ -110,12 +110,12 @@
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <h3 class="text-center mb-4">Корзина</h3>
+                                <h3 class="text-center mb-4">Таблица</h3>
                                 <div class="container" id="cart-items-container">
                                     <!-- Разметка корзины -->
                                     <div class="card mb-3 text-bg-light shadow-lg">
                                         <div class="card-header">
-                                            <h5 class="card-title">Товар</h5>
+                                            <h5 class="card-title">Продукты</h5>
                                         </div>
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
@@ -150,14 +150,14 @@
                                     </div>
                                     <div class="card mb-3 shadow-lg">
                                         <div class="card-footer">
-                                            <p class="float-left">Итого <strong>1</strong> товар(а) на сумму</p>
+                                            <p class="float-left">Итого <strong>1</strong> продукт(а) на сумму</p>
                                             <h4 class="float-left"><strong>100.00 $</strong></h4>
                                         </div>
                                     </div>
                                     <!-- Закончилась разметка корзины -->
                                 </div>
                                 <a class="btn btn-dark" href="orders/create_order.html">
-                                    Оформить заказ
+                                    Внести данные в таблицу
                                 </a>
                             </div>
                         </div>

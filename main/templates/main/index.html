@@ -2,11 +2,67 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+    <link rel="stylesheet" href="{% static 'deps/css/my_footer_css.css' %}">
+    <style>
+
+        .neon-container {
+            background-color:#343a40;
+            background-color: transparent;
+            padding: 3rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .neon-title {
+            color: #fff;
+            text-shadow: 
+                0 0 5px #fff,
+                0 0 10px #fff,
+                0 0 20px #fff,
+                0 0 40px #0ff,
+                0 0 80px #0ff,
+                0 0 90px #0ff,
+                0 0 100px #0ff,
+                0 0 150px #0ff;
+            font-size: 4rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: flicker 1.5s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow: 
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px #fff,
+                    0 0 40px #0ff,
+                    0 0 80px #0ff,
+                    0 0 90px #0ff,
+                    0 0 100px #0ff,
+                    0 0 150px #0ff;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .neon-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
 {% endblock css %}
 
 {% block content %}
-    <h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
+<div class="neon-container">
+    <h1 class="neon-title">{{ APP_NAME }}</h1>
+</div>
+
+<h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
 {% endblock content %}
 
 {% block footer %}
@@ -16,7 +72,3 @@
     </div>
 </footer>
 {% endblock footer %}
-
-
-
-
