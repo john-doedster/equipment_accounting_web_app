@@ -6,12 +6,9 @@ from equipment.models import Categories
 
 def index(request):
 
-    categories = Categories.objects.all()
-
     context = {
         'title': 'Учётка - Главная страница',
         'APP_NAME': 'Учётка',  # Название вашего приложения
-        'categories': categories
     }
     return render(request, 'main/index.html', context)
 
