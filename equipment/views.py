@@ -1,12 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from equipment.models import Products
 
 
-def catalog(request):
+def catalog(request, category_slug):
 
-    equipment = Products.objects.all()
-
+    if category_slug == 'all':
+        equipment = Products.objects.all()
+    else:
+        equipment = get_object_or_404(Products.objects.filter(category__slug=category_slug))
+    
     context = {
         "title": "Home - Каталог",
         "equipment": equipment,
