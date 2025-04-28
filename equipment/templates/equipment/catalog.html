@@ -55,7 +55,7 @@
                 <a href="{% url "catalog:product" product.slug %}">
                     <p class="card-title">{{ product.name }}</p>
                 </a>
-                <p class="card-text text-truncate">{{ product.description }}</p>
+                <p class="card-text">{{ product.description|truncatechars:50}}</p>
                 <p class="product_id">{{ product.display_id }}</p>
                 <div class="d-flex justify-content-between">
                     {%comment%}<p><s>100</s> $</p>
@@ -78,9 +78,7 @@
     <ul class="pagination justify-content-center my-4">
         <div class="custom-shadow d-flex">
             <li class="page-item {% if not equipment.has_previous %} disabled {% endif %}">
-              <a class="page-link" href = "{% if equipment.has_previous %}
-              {% url "catalog:index" slug_url equipment.previous_page_number %}
-              {% else %}
+              <a class="page-link" href = "{% if equipment.has_previous %}?page={{equipment.previous_page_number}}{% else %}
               #
               {% endif %}">Назад</a>
             </li>
@@ -88,15 +86,13 @@
             {% for page in equipment.paginator.page_range %}
             {% if page >= equipment.number|add:-2 and page <= equipment.number|add:+2 %}
                 <li class="page-item {% if equipment.number == page %} active {% endif %}">
-                    <a class="page-link" href="{% url "catalog:index" slug_url page %}">{{ page }}</a>
+                    <a class="page-link" href="?page={{page}}">{{ page }}</a>
                 </li>
             {% endif %}
             {% endfor %}
             
             <li class="page-item {% if not equipment.has_next %} disabled {% endif %}">
-              <a class="page-link" href = "{% if equipment.has_next %}
-              {% url "catalog:index" slug_url equipment.next_page_number %}
-              {% else %}
+              <a class="page-link" href = "{% if equipment.has_next %}?page={{equipment.next_page_number}}{% else %}
               #
               {% endif %}">Следующая</a>
             </li>

@@ -4,7 +4,9 @@ from django.shortcuts import get_list_or_404, get_object_or_404, render
 from equipment.models import Products
 
 
-def catalog(request, category_slug, page = 1):
+def catalog(request, category_slug):
+
+    page = request.GET.get('page', 1)
 
     if category_slug == 'all':
         equipment = Products.objects.all()
@@ -12,7 +14,7 @@ def catalog(request, category_slug, page = 1):
         equipment = get_list_or_404(Products.objects.filter(category__slug=category_slug))
     
     paginator = Paginator(equipment, 2)
-    current_page = paginator.page(page)
+    current_page = paginator.page(int(page))
 
     context = {
         "title": "Home - Каталог",
