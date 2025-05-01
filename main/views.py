@@ -7,7 +7,7 @@ from equipment.models import Categories
 def index(request):
 
     context = {
-        'title': 'Учётка - Главная страница',
+        'title': 'УЧЁТКА',
         'APP_NAME': 'Учётка',  # Название вашего приложения
     }
     return render(request, 'main/index.html', context)

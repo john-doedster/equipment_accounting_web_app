@@ -22,7 +22,7 @@ def catalog(request, category_slug=None):
     if order_by and order_by != "default":
         equipment = equipment.order_by(order_by)
 
-    paginator = Paginator(equipment, 2)
+    paginator = Paginator(equipment, 3)
     current_page = paginator.page(int(page))
 
     context = {
