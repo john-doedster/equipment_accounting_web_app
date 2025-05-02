@@ -66,3 +66,22 @@ def about(request):
     }
     return render(request, 'main/about.html', context)
 
+
+def contacts(request):
+    context = {
+        'title': 'Контакты',
+        'content': "Контактная информация",
+        'text_on_page': mark_safe("""
+            <h3>Наши контакты</h3>
+            <p><strong>Адрес:</strong> г. Москва, ул. Примерная, д. 123</p>
+            <p><strong>Телефон:</strong> +7 (495) 123-45-67</p>
+            <p><strong>Email:</strong> info@example.com</p>
+            <p><strong>Режим работы:</strong> Пн-Пт: 9:00 - 18:00</p>
+            
+            <h4 class="mt-4">Отдел технической поддержки</h4>
+            <p>Телефон: +7 (495) 765-43-21</p>
+            <p>Email: support@example.com</p>
+        """)
+    }
+    return render(request, 'main/contacts.html', context)
+
