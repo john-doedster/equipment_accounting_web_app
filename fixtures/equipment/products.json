@@ -1,0 +1,67 @@
+[
+    {
+        "model": "equipment.products",
+        "pk": 1,
+        "fields": {
+            "name": "������������ ����",
+            "slug": "kompyuternaya-mysh",
+            "description": "������������ ���� ����� Logitech",
+            "image": "goods_images/logitech_mouse_gjhPAr8.jpg",
+            "price": "1990.00",
+            "quantity": 10,
+            "category": 8
+        }
+    },
+    {
+        "model": "equipment.products",
+        "pk": 2,
+        "fields": {
+            "name": "���� Razer",
+            "slug": "mysh-razer",
+            "description": "������������ ���� �� Razer",
+            "image": "goods_images/mouse_razer_83GzSWd.png",
+            "price": "1890.00",
+            "quantity": 10,
+            "category": 8
+        }
+    },
+    {
+        "model": "equipment.products",
+        "pk": 3,
+        "fields": {
+            "name": "������",
+            "slug": "kreslo",
+            "description": "������� ������",
+            "image": "goods_images/kreslo_klcNK8U.png",
+            "price": "21000.00",
+            "quantity": 5,
+            "category": 11
+        }
+    },
+    {
+        "model": "equipment.products",
+        "pk": 4,
+        "fields": {
+            "name": "������ ��� ����� Cougar",
+            "slug": "kreslo-dlya-ofisa-cougar",
+            "description": "������ ��� ����� Cougar",
+            "image": "goods_images/kt65WH3tGvM.jpg",
+            "price": "25990.00",
+            "quantity": 10,
+            "category": 11
+        }
+    },
+    {
+        "model": "equipment.products",
+        "pk": 5,
+        "fields": {
+            "name": "�������",
+            "slug": "monitor",
+            "description": "������������ �������",
+            "image": "goods_images/monitor_samsung_vSTT5qV.jpg",
+            "price": "12990.00",
+            "quantity": 20,
+            "category": 10
+        }
+    }
+]
