@@ -2,14 +2,136 @@
 {% load static %}
 
 {% block css %}
-    <link rel="stylesheet" href="{% static "deps/css/my_footer_css.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    /* Основные стили */
+    .about-hero {
+        background: linear-gradient(135deg,rgb(176, 20, 176), #a777e3);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .feature-card {
+        border: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        height: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #6e8efb;
+    }
+    
+    .role-card {
+        border-left: 4px solid #a777e3;
+        transition: all 0.3s ease;
+    }
+    
+    .role-card:hover {
+        border-left: 4px solid #6e8efb;
+        background-color: #f8f9fa;
+    }
+    
+    .role-icon {
+        color: #a777e3;
+        margin-right: 10px;
+    }
+    
+    .about-section {
+        padding: 3rem 0;
+    }
+    
+    .section-title {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+    
+    .section-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background: #6e8efb;
+    }
+</style>
 {% endblock css %}
 
 {% block content %}
-    <div class="mt-5 pt-5 bg-white custom-shadow rounded">
-        <h2 class="m-2"><strong>{{ content }}</strong></h2>
-        <p class="m-2"> {{ text_on_page }}</p>
+
+<!-- Основной текст -->
+<style>
+    .gradient-border {
+        position: relative;
+        padding: 20px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    .gradient-border::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #6e8efb,rgb(68, 22, 123));
+        z-index: -1;
+        border-radius: 12px;
+    }
+</style>
+
+<div class="container about-section">
+    <div class="row">
+            <div class="col-lg-10 mx-auto text-white text-center fs-4 gradient-border">
+            {{ text_on_page }}
+        </div>
     </div>
+</div>
+
+<!-- Особенности -->
+<div class="container about-section">
+    <h2 class="text-center text-white section-title">Наши преимущества</h2>
+    <div class="row">
+        {% for feature in features %}
+        <div class="col-md-3 mb-4">
+            <div class="card feature-card text-center p-4">
+                <i class="fas {{ feature.icon }} feature-icon"></i>
+                <h4>{{ feature.title }}</h4>
+                <p>{{ feature.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Для кого -->
+<div class="bg-light about-section">
+    <div class="container">
+        <h2 class="text-center section-title">Для кого этот сервис?</h2>
+        <div class="row">
+            {% for role in user_roles %}
+            <div class="col-md-4 mb-4">
+                <div class="card role-card p-4">
+                    <h4><i class="fas {{ role.icon }} role-icon"></i> {{ role.title }}</h4>
+                    <p>{{ role.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
 {% endblock content %}
 
 {% block footer %}
