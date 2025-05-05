@@ -1,18 +1,22 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    UserCreationForm,
+    UserChangeForm,
+)
 
 from users.models import User
+
 
 class UserLoginForm(AuthenticationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'password']
+        fields = ["username", "password"]
 
     username = forms.CharField()
     password = forms.CharField()
-    
-        
+
     # username = forms.CharField(
     #     label = 'Имя',
     #     widget=forms.TextInput(attrs={"autofocus": True,
@@ -26,6 +30,7 @@ class UserLoginForm(AuthenticationForm):
     #                                       'placeholder': 'Введите ваш пароль'})
     # )
 
+
 class UserRegistrationForm(UserCreationForm):
 
     class Meta:
@@ -38,10 +43,66 @@ class UserRegistrationForm(UserCreationForm):
             "password1",
             "password2",
         )
-    
+
     first_name = forms.CharField()
     last_name = forms.CharField()
     username = forms.CharField()
     email = forms.CharField()
     password1 = forms.CharField()
     password2 = forms.CharField()
+
+
+class ProfileForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = (
+            "image",
+            "first_name",
+            "last_name",
+            "username",
+            "email",
+        )
+        
+    image = forms.ImageField(required=False)
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    username = forms.CharField()
+    email = forms.CharField()
+
+
+    # image = forms.ImageField(
+    #     widget=forms.FileInput(attrs={"class": "form-control mt-3"}), required=False
+    # )
+    # first_name = forms.CharField(
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "placeholder": "Введите ваше имя",
+    #         }
+    #     )
+    # )
+    # last_name = forms.CharField(
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "placeholder": "Введите вашу фамилию",
+    #         }
+    #     )
+    # )
+    # username = forms.CharField(
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "placeholder": "Введите ваше имя пользователя",
+    #         }
+    #     )
+    # )
+    # email = forms.CharField(
+    #     widget=forms.EmailInput(
+    #         attrs={
+    #             "class": "form-control",
+    #             "placeholder": "Введите ваш email *youremail@example.com",
+    #             # 'readonly': True,
+    #         }
+    #     ),
+    # )
