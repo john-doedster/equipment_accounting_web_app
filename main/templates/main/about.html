@@ -5,83 +5,125 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
     /* Основные стили */
+    :root {
+        --primary-color: #6e8efb;
+        --secondary-color: #a777e3;
+        --dark-color: rgb(68, 22, 123);
+        --light-color: #f8f9fa;
+        --text-dark: #333;
+        --text-light: #fff;
+    }
+    
     .about-hero {
-        background: linear-gradient(135deg,rgb(176, 20, 176), #a777e3);
-        color: white;
-        padding: 3rem 0;
-        margin-bottom: 2rem;
-        border-radius: 0 0 20px 20px;
+        background: linear-gradient(135deg, var(--dark-color), var(--secondary-color));
+        color: var(--text-light);
+        padding: 4rem 0;
+        margin-bottom: 3rem;
+        text-align: center;
+        border-radius: 14px;
     }
     
-    .feature-card {
-        border: none;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        height: 100%;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    .bg-light.about-section {
+        position: relative;
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 2rem auto;
+        z-index: 1;
+        color: #000;
     }
-    
-    .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-    }
-    
-    .feature-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: #6e8efb;
-    }
-    
-    .role-card {
-        border-left: 4px solid #a777e3;
-        transition: all 0.3s ease;
-    }
-    
-    .role-card:hover {
-        border-left: 4px solid #6e8efb;
-        background-color: #f8f9fa;
-    }
-    
-    .role-icon {
-        color: #a777e3;
-        margin-right: 10px;
-    }
-    
-    .about-section {
-        padding: 3rem 0;
-    }
+    .bg-light.about-section .section-title,
+    .bg-light.about-section .role-card h4,
+    .bg-light.about-section .role-card p {
+        color: #000; /* Явное указание черного цвета */
+        }
     
     .section-title {
         position: relative;
         margin-bottom: 2rem;
+        color: white; /* Белый цвет текста */
+        text-align: center; /* Центрирование заголовка */
+        font-size: 3rem; /* Размер шрифта */
     }
-    
+
     .section-title:after {
         content: '';
         position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 50px;
-        height: 3px;
-        background: #6e8efb;
+        bottom: -15px; /* Отступ линии от текста */
+        left: 50%; /* Начало от центра */
+        transform: translateX(-50%); /* Точное центрирование */
+        width: 500px; /* Увеличенная длина линии */
+        height: 5px; /* Толщина линии */
+        background: #6e8efb; /* Цвет линии */
+        border-radius: 3px; /* Закругление концов линии */
     }
-</style>
-{% endblock css %}
-
-{% block modal_cart %} 
-{% include "includes/cart_button.html" %}
-{% endblock modal_cart %}
-
-{% block content %}
-
-<!-- Основной текст -->
-<style>
+    
+    /* Карточки особенностей */
+    .feature-card {
+        border: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        height: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        padding: 2rem;
+        text-align: center;
+        background: white;
+        margin: 0 auto 1.5rem;
+        max-width: 300px;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        color: var(--primary-color);
+        border-radius: 14px;
+    }
+    
+    /* Карточки ролей */
+    .role-card {
+        border-left: 4px solid var(--secondary-color);
+        transition: all 0.3s ease;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        background: white;
+        border-radius: 14px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        height: 100%;
+    }
+    
+    .role-card:hover {
+        border-left: 4px solid var(--primary-color);
+        background-color: var(--light-color);
+    }
+    
+    .role-icon {
+        color: var(--secondary-color);
+        margin-right: 10px;
+        font-size: 1.2rem;
+        border-radius: 14px;
+    }
+    
+    /* Градиентный блок */
+    .gradient-container {
+        max-width: 1000px;
+        margin: 0 auto 4rem;
+        padding: 0 1rem;
+    }
+    
     .gradient-border {
         position: relative;
-        padding: 20px;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.1);
+        padding: 2.5rem;
+        border-radius: 14px;
+        background: white;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
+    
     .gradient-border::before {
         content: '';
         position: absolute;
@@ -89,46 +131,51 @@
         left: -2px;
         right: -2px;
         bottom: -2px;
-        background: linear-gradient(45deg, #6e8efb,rgb(68, 22, 123));
+        background: linear-gradient(45deg, var(--primary-color), var(--dark-color));
         z-index: -1;
-        border-radius: 12px;
+        border-radius: 14px;
+    }
+    
+    /* Футер */
+    footer {
+        padding: 2.5rem 0;
+        background: var(--dark-color);
+        color: var(--text-light);
+        text-align: center;
+        margin-top: 4rem;
     }
 </style>
+{% endblock css %}
 
-<div class="container about-section">
-    <div class="row">
-            <div class="col-lg-10 mx-auto text-white text-center fs-4 gradient-border">
+{% block content %}
+<!-- Герой секция -->
+<div class="about-hero">
+    <div class="container">
+        <h1 class="display-4">Учет материальных ценностей</h1>
+        <p class="lead">Инновационное решение для автоматизации учета на кафедре</p>
+    </div>
+</div>
+
+<!-- Основной текст -->
+<div class="gradient-container">
+    <div class="gradient-border">
+        <div class="col-lg-10 mx-auto text-dark fs-4">
             {{ text_on_page }}
         </div>
     </div>
 </div>
 
 <!-- Особенности -->
-<div class="container about-section">
-    <h2 class="text-center text-white section-title">Наши преимущества</h2>
-    <div class="row">
-        {% for feature in features %}
-        <div class="col-md-3 mb-4">
-            <div class="card feature-card text-center p-4">
-                <i class="fas {{ feature.icon }} feature-icon"></i>
-                <h4>{{ feature.title }}</h4>
-                <p>{{ feature.description }}</p>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Для кого -->
-<div class="bg-light about-section">
+<div class="about-section">
     <div class="container">
-        <h2 class="text-center section-title">Для кого этот сервис?</h2>
-        <div class="row">
-            {% for role in user_roles %}
-            <div class="col-md-4 mb-4">
-                <div class="card role-card p-4">
-                    <h4><i class="fas {{ role.icon }} role-icon"></i> {{ role.title }}</h4>
-                    <p>{{ role.description }}</p>
+        <h2 class="section-title">Наши преимущества</h2>
+        <div class="row justify-content-center">
+            {% for feature in features %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="feature-card">
+                    <i class="fas {{ feature.icon }} feature-icon"></i>
+                    <h4>{{ feature.title }}</h4>
+                    <p class="text-muted">{{ feature.description }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -136,6 +183,22 @@
     </div>
 </div>
 
+<!-- Для кого -->
+<div class="about-section bg-light">
+    <div class="container">
+        <h2 class="section-title">Для кого этот сервис?</h2>
+        <div class="row justify-content-center">
+            {% for role in user_roles %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="role-card">
+                    <h4><i class="fas {{ role.icon }} role-icon"></i> {{ role.title }}</h4>
+                    <p class="text-muted">{{ role.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock content %}
 
 {% block footer %}
@@ -145,7 +208,3 @@
     </div>
 </footer>
 {% endblock footer %}
-
-
-
-

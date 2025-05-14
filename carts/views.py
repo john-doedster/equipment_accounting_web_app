@@ -82,7 +82,6 @@ def cart_change(request):
         "cart_items_html": cart_items_html,
         "quantity": updated_quantity,
     }
-
     return JsonResponse(response_data)
 
 

@@ -16,7 +16,7 @@
         </button>
 
         <form action="{% if request.GET.q %}{% url "catalog:search" %}{%else%}{% url "catalog:index" slug_url %}{%endif%}" method="get" class="dropdown-menu bg-dark" data-bs-theme="dark">
-            <div class="form-check text-white mx-3">
+            {% comment %} <div class="form-check text-white mx-3">
                 <input class="form-check-input" type="checkbox" name="on_sale" id="flexCheckDefault" value="on" {% if request.GET.on_sale == 'on'%}checked{% endif %}>
                 {% if request.GET.q %}
                 <input type="hidden" name="q" value="{{ request.GET.q }}">
@@ -24,7 +24,9 @@
                 <label class="form-check-label" for="flexCheckDefault">
                     Товары по акции
                 </label>
-            </div>
+            </div> {% endcomment %}
+
+            
             <p class="text-white mx-3 mt-3">Сортировать:</p>
             <div class="form-check text-white mx-3">
                 <input class="form-check-input" type="radio" name="order_by" id="flexRadioDefault1" value="default" 
