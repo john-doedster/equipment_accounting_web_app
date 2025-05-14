@@ -57,14 +57,14 @@
     </style>
 {% endblock css %}
 
+{% block modal_cart %} 
+{% include "includes/cart_button.html" %}
+{% endblock modal_cart %}
+
 {% block content %}
 <div class="neon-container">
     <h1 class="neon-title">{{ APP_NAME }}</h1>
 </div>
-
-
-
-
 <h1 class="mt-5 pt-5"><strong>{{ content }}</strong></h1>
 {% endblock content %}
 
