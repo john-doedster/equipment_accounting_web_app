@@ -8,10 +8,11 @@
         .neon-container {
             background-color:#343a40;
             background-color: transparent;
-            padding: 3rem;
-            margin: 2rem 0;
+            padding: 5rem 3rem;
+            margin: 3rem 0;
             border-radius: 10px;
             text-align: center;
+            position: relative;
         }
         
         .neon-title {
@@ -25,11 +26,16 @@
                 0 0 90px #0ff,
                 0 0 100px #0ff,
                 0 0 150px #0ff;
-            font-size: 4rem;
+            font-size: 6rem;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 5px;
+            letter-spacing: 8px;
             animation: flicker 1.5s infinite alternate;
+             display: inline-block;
+            position: relative;
+            left: -50px; /* Сдвиг влево */
+            top: 50px; /* Сдвиг вниз */
+            transform: scale(1.2); /* Дополнительное увеличение */
         }
         
         @keyframes flicker {
@@ -52,6 +58,9 @@
         @media (max-width: 768px) {
             .neon-title {
                 font-size: 2rem;
+                left: -20px; /* Меньший сдвиг на мобильных */
+                top: 30px;
+                transform: scale(1.1);
             }
         }
     </style>
