@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'table.apps.TableConfig',
 
     "debug_toolbar",
 
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'equipment',
     'users',
     'carts',
+    # 'table',
 ]
 
 MIDDLEWARE = [

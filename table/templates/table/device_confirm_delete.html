@@ -1,0 +1,18 @@
+{% extends "table/base.html" %}
+
+{% block table_content %}
+<h2>Подтверждение удаления</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p>Вы уверены, что хотите удалить устройство "{{ object }}"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'table:device_list' %}" class="btn btn-secondary">Отмена</a>
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
