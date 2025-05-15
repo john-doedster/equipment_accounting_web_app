@@ -48,6 +48,10 @@
                             <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Таблица</a>
                         </li>
 
+                        {% comment %} <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'custom_tables:table_list' %}">Альтернативные таблицы</a>
+                        </li> {% endcomment %}
+
                         {% if not user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{% url "user:login" %}">Войти</a>
