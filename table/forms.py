@@ -3,6 +3,15 @@ from django.utils.translation import gettext_lazy as _
 from .models import Device, Category
 
 class DeviceForm(forms.ModelForm):
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all().order_by('name'),
+        label=_('Категория'),
+        required=False,  # Если категория не обязательна
+        empty_label="Выберите категорию",  # Заменяем прочерк на это текст
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     class Meta:
         model = Device
         fields = ['name', 'category', 'inventory_number', 'status', 'location', 'description']
@@ -29,6 +38,13 @@ class DeviceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.fields['category'].empty_label = "Выберите категорию"
+        self.fields['category'].queryset = Category.objects.all().order_by('name')
+        self.fields['category'].widget.attrs.update({
+            'class': 'form-select'
+        })
+
         # Добавляем классы form-control для всех полей
         for field_name, field in self.fields.items():
             if field_name not in ['status', 'category']:
