@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'equipment',
     'users',
     'carts',
-    # 'table',
+    'orders',
 ]
 
 MIDDLEWARE = [

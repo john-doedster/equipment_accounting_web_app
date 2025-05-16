@@ -7,9 +7,7 @@ from carts.utils import get_user_carts
 from equipment.models import Products
 
 def cart_add(request):
-
     product_id = request.POST.get("product_id")
-
     product = Products.objects.get(id=product_id)
     
     if request.user.is_authenticated:
@@ -22,9 +20,6 @@ def cart_add(request):
                 cart.save()
         else:
             Cart.objects.create(user=request.user, product=product, quantity=1)
-
-
-    #добавление товара в корзину для анонимного пользователя
     else:
         carts = Cart.objects.filter(session_key=request.session.session_key, product=product)
 
@@ -36,23 +31,18 @@ def cart_add(request):
         else:
             Cart.objects.create(session_key=request.session.session_key, product=product, quantity=1)
 
+    # Обновляем корзину и возвращаем JSON-ответ в любом случае
+    user_cart = get_user_carts(request)
+    cart_items_html = render_to_string(
+        "carts/includes/included_cart.html", {"carts": user_cart}, request=request)
 
-        user_cart = get_user_carts(request)
-        cart_items_html = render_to_string(
-            "carts/includes/included_cart.html", {"carts": user_cart}, request=request)
+    response_data = {
+        "message": "Продукт добавлен в корзину",
+        "cart_items_html": cart_items_html,
+    }
 
-        response_data = {
-            "message": "Продукт добавлен в корзину",
-            "cart_items_html": cart_items_html,
-        }
-
-        return JsonResponse(response_data)
+    return JsonResponse(response_data)
     
-    # user_cart = get_user_carts(request)
-    # cart_items_html = render_to_string(
-    #     "carts/includes/included_cart.html", {"carts": user_cart}, request=request)
-
-
 
 
 def cart_change(request):
