@@ -27,7 +27,8 @@ urlpatterns = [
     path('catalog/', include('equipment.urls', namespace='catalog')),
     path('user/', include('users.urls', namespace='user')),
     path('cart/', include('carts.urls', namespace='cart')),
-    path('table/', include('table.urls')),
+    # path('table/', include('table.urls')),
+    path('table/', include('table.urls', namespace='table')),
 ]
 if settings.DEBUG:
     urlpatterns += [

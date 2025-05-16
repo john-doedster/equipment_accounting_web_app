@@ -1,0 +1,54 @@
+{% extends "table/base.html" %}
+{% load static %}
+
+{% block table_content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Импортированные устройства</h2>
+    <a href="{% url 'table:import_devices' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Новый импорт
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>Основное средство</th>
+                <th>Инвентарный номер</th>
+                <th>Дата принятия</th>
+                <th>Балансовая стоимость</th>
+                <th>Количество</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in devices %}
+            <tr>
+                <td>{{ device.row_number }}</td>
+                <td>{{ device.asset_name }}</td>
+                <td>{{ device.inventory_number }}</td>
+                <td>{{ device.acceptance_date|date:"d.m.Y" }}</td>
+                <td>{{ device.book_value }}</td>
+                <td>{{ device.quantity }}</td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-info" title="Описание">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-warning" title="Редактировать">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="#" class="btn btn-sm btn-danger" title="Удалить">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">Нет импортированных данных</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

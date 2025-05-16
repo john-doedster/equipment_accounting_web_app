@@ -55,3 +55,16 @@ class Device(models.Model):
         verbose_name = _("Устройство")
         verbose_name_plural = _("Устройства")
         ordering = ['-created_at']
+
+class ImportedDevice(models.Model):
+    row_number = models.CharField(max_length=50, verbose_name="№ п/п")
+    asset_name = models.CharField(max_length=255, verbose_name="Основное средство")
+    inventory_number = models.CharField(max_length=100, verbose_name="Инвентарный номер")
+    acceptance_date = models.DateField(verbose_name="Дата принятия к учету")
+    book_value = models.DecimalField(max_digits=12, decimal_places=2, verbose_name="Балансовая стоимость")
+    quantity = models.IntegerField(verbose_name="Количество")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.asset_name} ({self.inventory_number})"

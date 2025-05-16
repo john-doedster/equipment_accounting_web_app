@@ -11,6 +11,11 @@
         <a href="{% url 'table:device_export' %}?{{ request.GET.urlencode }}" class="btn btn-success">
             <i class="bi bi-file-excel"></i> Экспорт в Excel
         </a>
+
+        <a href="{% url 'table:import_devices' %}" class="btn btn-info">
+            <i class="bi bi-upload"></i> Импорт Excel
+        </a>
+
     </div>
 
     <div class="card mb-4">
