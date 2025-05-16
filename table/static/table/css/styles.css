@@ -1,0 +1,42 @@
+/* Основные стили для пагинации */
+.table-pagination {
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: center;
+}
+
+/* Стили для таблицы */
+.device-table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border-collapse: collapse;
+}
+
+.device-table th,
+.device-table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.device-table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+
+/* Фиксация пагинации внизу */
+.content-wrapper {
+    min-height: calc(100vh - 150px);
+    position: relative;
+}
+
+.pagination-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+}
