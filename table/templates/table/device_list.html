@@ -6,6 +6,9 @@
     <a href="{% url 'table:device_create' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle"></i> Добавить устройство
     </a>
+    <a href="{% url 'table:device_export' %}?{{ request.GET.urlencode }}" class="btn btn-success">
+        <i class="bi bi-file-excel"></i> Экспорт в Excel
+    </a>
 </div>
 
 <div class="card mb-4">
@@ -33,6 +36,7 @@
                 <button type="submit" class="btn btn-outline-primary">Фильтровать</button>
                 <a href="{% url 'table:device_list' %}" class="btn btn-outline-secondary">Сбросить</a>
             </div>
+
         </form>
     </div>
 </div>

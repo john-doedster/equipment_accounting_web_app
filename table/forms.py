@@ -62,3 +62,17 @@ class DeviceForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError(_('Устройство с таким инвентарным номером уже существует'))
         return inventory_number
+    
+    # forms.py
+    class ExportForm(forms.Form):
+        COLUMN_CHOICES = [
+            ('name', 'Название'),
+            ('category', 'Категория'),
+            ('inventory_number', 'Инв.номер'),
+            ('status', 'Статус'),
+        ]
+        columns = forms.MultipleChoiceField(
+            choices=COLUMN_CHOICES,
+            widget=forms.CheckboxSelectMultiple,
+            initial=['name', 'category', 'inventory_number']
+        )    

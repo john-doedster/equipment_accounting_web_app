@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import export_devices_to_excel
 
 app_name = 'table'
 
@@ -9,4 +10,5 @@ urlpatterns = [
     path('<int:pk>/', views.DeviceDetailView.as_view(), name='device_detail'),
     path('<int:pk>/update/', views.DeviceUpdateView.as_view(), name='device_update'),
     path('<int:pk>/delete/', views.DeviceDeleteView.as_view(), name='device_delete'),
+    path('export/', export_devices_to_excel, name='device_export'),
 ]
