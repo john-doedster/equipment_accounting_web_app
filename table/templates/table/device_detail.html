@@ -1,40 +1,84 @@
 {% extends "table/base.html" %}
 
+{% block css %}
+<style>
+    /* Стили для sticky footer */
+    html, body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa; /* Добавлен фон для контраста */
+    }
+    .content-wrapper {
+        flex: 1 0 auto;
+        padding: 20px 0;
+    }
+    footer {
+        flex-shrink: 0;
+    }
+    /* Дополнительные стили для улучшения внешнего вида */
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+    }
+    dt {
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
 {% block table_content %}
-<h2>Устройство: {{ device.name }}</h2>
+<div class="content-wrapper">
+    <h2 style="color:rgb(255, 255, 255);">Устройство: {{ device.name }}</h2>
 
-<div class="card mb-3">
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">Инвентарный номер:</dt>
-            <dd class="col-sm-9">{{ device.inventory_number }}</dd>
+    <div class="card mb-4">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Инвентарный номер:</dt>
+                <dd class="col-sm-9">{{ device.inventory_number }}</dd>
 
-            <dt class="col-sm-3">Категория:</dt>
-            <dd class="col-sm-9">{{ device.category.name|default:"-" }}</dd>
+                <dt class="col-sm-3">Категория:</dt>
+                <dd class="col-sm-9">{{ device.category.name|default:"-" }}</dd>
 
-            <dt class="col-sm-3">Статус:</dt>
-            <dd class="col-sm-9">{{ device.get_status_display }}</dd>
+                <dt class="col-sm-3">Статус:</dt>
+                <dd class="col-sm-9">{{ device.get_status_display }}</dd>
 
-            <dt class="col-sm-3">Местоположение:</dt>
-            <dd class="col-sm-9">{{ device.location|default:"-" }}</dd>
+                <dt class="col-sm-3">Местоположение:</dt>
+                <dd class="col-sm-9">{{ device.location|default:"-" }}</dd>
 
-            <dt class="col-sm-3">Описание:</dt>
-            <dd class="col-sm-9">{{ device.description|default:"-"|linebreaks }}</dd>
+                <dt class="col-sm-3">Описание:</dt>
+                <dd class="col-sm-9">{{ device.description|default:"-"|linebreaks }}</dd>
 
-            <dt class="col-sm-3">Дата создания:</dt>
-            <dd class="col-sm-9">{{ device.created_at }}</dd>
+                <dt class="col-sm-3">Дата создания:</dt>
+                <dd class="col-sm-9">{{ device.created_at }}</dd>
 
-            <dt class="col-sm-3">Последнее обновление:</dt>
-            <dd class="col-sm-9">{{ device.updated_at }}</dd>
-        </dl>
+                <dt class="col-sm-3">Последнее обновление:</dt>
+                <dd class="col-sm-9">{{ device.updated_at }}</dd>
+            </dl>
+        </div>
     </div>
-</div>
 
-<div class="d-flex justify-content-between">
-    <a href="{% url 'table:device_list' %}" class="btn btn-outline-secondary">Назад к списку</a>
-    <div>
-        <a href="{% url 'table:device_update' device.pk %}" class="btn btn-outline-warning">Редактировать</a>
-        <a href="{% url 'table:device_delete' device.pk %}" class="btn btn-outline-danger">Удалить</a>
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'table:device_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Назад к списку
+        </a>
+        <div>
+            <a href="{% url 'table:device_update' device.pk %}" class="btn btn-warning">
+                <i class="fas fa-edit"></i> Редактировать
+            </a>
+            <a href="{% url 'table:device_delete' device.pk %}" class="btn btn-danger ml-2">
+                <i class="fas fa-trash-alt"></i> Удалить
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}
+
+{% block footer %}
+<footer class="py-4 bg-dark mt-auto">
+    <div class="container">
+        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
+    </div>
+</footer>
+{% endblock footer %}

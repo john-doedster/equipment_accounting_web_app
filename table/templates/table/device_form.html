@@ -1,7 +1,7 @@
 {% extends "table/base.html" %}
 
 {% block table_content %}
-<h2>{% if object %}Редактирование устройства{% else %}Добавление устройства{% endif %}</h2>
+<h2 style="color: white;">{% if object %}Редактирование устройства{% else %}Добавление устройства{% endif %}</h2>
 
 <form method="post">
     {% csrf_token %}
@@ -29,3 +29,11 @@
     </div>
 </form>
 {% endblock %}
+
+{% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
+    </div>
+</footer>
+{% endblock footer %}

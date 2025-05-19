@@ -12,6 +12,6 @@ urlpatterns = [
     path('<int:pk>/update/', views.DeviceUpdateView.as_view(), name='device_update'),
     path('<int:pk>/delete/', views.DeviceDeleteView.as_view(), name='device_delete'),
     path('export/', export_devices_to_excel, name='device_export'),
-    path('import/', import_devices, name='import_devices'),
-    path('imported-devices/', imported_devices_list, name='imported_devices_list'),
+    path('import/', views.import_devices, name='import_devices'),
+    path('imported-devices/', views.imported_devices_list, name='imported_devices_list'),
 ]

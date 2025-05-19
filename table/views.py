@@ -45,6 +45,7 @@ class DeviceListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["title"] = _("Список устройств")
         context["categories"] = Category.objects.all()
         context["status_choices"] = Device.Status.choices
         return context
@@ -61,6 +62,11 @@ class DeviceCreateView(SuccessMessageMixin, CreateView):
         response = super().form_valid(form)
         messages.success(self.request, self.success_message)
         return response
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("Добавление устройства")
+        return context    
 
 
 class DeviceUpdateView(SuccessMessageMixin, UpdateView):
@@ -74,6 +80,11 @@ class DeviceUpdateView(SuccessMessageMixin, UpdateView):
         response = super().form_valid(form)
         messages.success(self.request, self.success_message)
         return response
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("Редактирование устройства")
+        return context
 
 
 class DeviceDeleteView(DeleteView):
@@ -86,11 +97,20 @@ class DeviceDeleteView(DeleteView):
         messages.success(request, _("Устройство успешно удалено"))
         return response
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("Удаление устройства")
+        return context
 
 class DeviceDetailView(DetailView):
     model = Device
     template_name = "table/device_detail.html"
     context_object_name = "device"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = _("Просмотр устройства")
+        return context 
 
 
 def export_devices_to_excel(request):
@@ -284,15 +304,23 @@ def import_devices(request):
     # GET запрос или ошибка валидации
     form = ImportExcelForm()
     
+    context = {
+            'form': form,
+            'title': _("Импорт устройств"),  # Добавляем заголовок
+        }
+
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({
             'status': 'error',
             'message': 'Неверный метод запроса'
         }, status=400)
     
-    return render(request, 'table/import.html', {'form': form})
+    return render(request, 'table/import.html', context)
 
 def imported_devices_list(request):
-    """Отображение списка импортированных устройств"""
     devices = ImportedDevice.objects.all().order_by('-created_at')
-    return render(request, 'table/imported_list.html', {'devices': devices})
+    context = {
+        'devices': devices,
+        'title': _("Импортированные устройства"),  # Добавляем заголовок
+    }
+    return render(request, 'table/imported_list.html', context)

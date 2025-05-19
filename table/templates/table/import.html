@@ -1,6 +1,6 @@
 {% extends "table/base.html" %}
-{% block content %}
 {% load static %}
+{% block content %}
 
 <div class="container mt-4">
     <div class="card">
@@ -8,7 +8,7 @@
             <h4><i class="bi bi-upload"></i> Импорт устройств из Excel</h4>
         </div>
         <div class="card-body">
-            <form method="post" enctype="multipart/form-data" id="importForm">
+            <form method="post" enctype="multipart/form-data" action="{% url 'table:import_devices' %}" id="importForm">
                 {% csrf_token %}
                 
                 <div class="mb-3">
@@ -21,17 +21,24 @@
                     <button type="button" class="btn btn-outline-secondary" id="fileButton">
                         <i class="bi bi-folder2-open"></i> Выбрать файл
                     </button>
+                     {% comment %} <script src="{% static 'js/button-handler.js' %}"></script> {% endcomment %}
                 </div>
                 
                 <button type="submit" class="btn btn-success" id="submitButton" disabled>
                     <i class="bi bi-upload"></i> Импортировать
                 </button>
-                <script src="{% static 'js/button-handler.js' %}"></script>
+                {% comment %} <script src="{% static 'js/button-handler.js' %}"></script> {% endcomment %}
             </form>
         </div>
     </div>
 </div>
 
+
+{% block scripts %}
+<script src="{% static 'js/import-form-handler.js' %}"></script>
+{% endblock %}
+
+{% comment %} {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('fileInput');
@@ -40,12 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const fileName = document.getElementById('fileName');
     const submitButton = document.getElementById('submitButton');
     
-    // Обработка клика по кнопке выбора файла
     fileButton.addEventListener('click', function() {
         fileInput.click();
     });
     
-    // Обработка выбора файла
     fileInput.addEventListener('change', function(e) {
         if (this.files && this.files[0]) {
             const file = this.files[0];
@@ -54,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
             fileLabel.textContent = 'Выбран файл:';
             submitButton.disabled = false;
             
-            // Валидация расширения файла
             if (!file.name.match(/\.(xlsx|xls)$/i)) {
                 alert('Пожалуйста, выберите файл Excel (.xlsx или .xls)');
                 this.value = '';
@@ -65,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Обработка отправки формы
     document.getElementById('importForm').addEventListener('submit', function(e) {
         if (!fileInput.files.length) {
             e.preventDefault();
@@ -73,12 +76,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
         
-        // Показываем индикатор загрузки
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> Идет загрузка...';
     });
 });
-</script>
+</script> {% endblock %} {% endcomment %}
+
 
 <style>
 .spinner {
@@ -91,3 +94,11 @@ document.addEventListener('DOMContentLoaded', function() {
 }
 </style>
 {% endblock %}
+
+{% comment %} {% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
+    </div>
+</footer>
+{% endblock footer %} {% endcomment %}

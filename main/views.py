@@ -8,7 +8,7 @@ def index(request):
 
     context = {
         'title': 'УЧЁТКА',
-        'APP_NAME': 'Учётка',  # Название вашего приложения
+        'APP_NAME': 'Учётка',  
     }
     return render(request, 'main/index.html', context)
 
@@ -21,8 +21,9 @@ def about(request):
         'title': 'О проекте',
         'content': "Информация",
         'features': [
+
             {
-                'icon': 'fa-automobile',
+                'icon': 'fa-cogs',
                 'title': 'Автоматизация учёта',
                 'description': 'Замена бумажных журналов и сложных таблиц'
             },
@@ -60,8 +61,8 @@ def about(request):
             }
         ],
         'text_on_page': mark_safe("""
-            <p class='lead'>Мы рады приветствовать вас в нашем веб-приложении для учёта оборудования!</p>
-            <p>Наша система создана для удобного управления IT-активами кафедры: компьютерами, серверами и сетевым оборудованием.</p>
+            <p>Рад приветствовать вас в веб-приложении для учёта оборудования!</p>
+            <p>Данная система создана для удобного управления IT-активами кафедры.</p>
         """)
     }
     return render(request, 'main/about.html', context)

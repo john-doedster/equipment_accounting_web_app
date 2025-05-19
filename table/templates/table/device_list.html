@@ -3,7 +3,7 @@
 
 {% block table_content %}
 <div class="content-wrapper" style="min-height: calc(100vh - 200px); padding-bottom: 80px;">
-    <h2>Список устройств</h2>
+    <h2 style="color: white;">Список устройств</h2>|
     <div class="mb-3">
         <a href="{% url 'table:device_create' %}" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Добавить устройство
@@ -147,9 +147,17 @@
         flex: 1;
     }
     
-    footer {
+    {% comment %} footer {
         flex-shrink: 0;
-    }
+    } {% endcomment %}
 </style>
 {% endblock %}
+
+{% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
+    </div>
+</footer>
+{% endblock footer %}
 

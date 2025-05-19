@@ -1,18 +1,63 @@
 {% extends "table/base.html" %}
 
-{% block table_content %}
-<h2>Подтверждение удаления</h2>
+{% block css %}
+<style>
+    /* Стили для sticky footer */
+    html, body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        background-color: #f8f9fa;
+    }
+    .content-wrapper {
+        flex: 1 0 auto;
+        padding: 20px 0;
+    }
+    footer {
+        flex-shrink: 0;
+    }
+    /* Дополнительные стили */
+    .card {
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+</style>
+{% endblock %}
 
-<div class="card">
-    <div class="card-body">
-        <p>Вы уверены, что хотите удалить устройство "{{ object }}"?</p>
-        <form method="post">
-            {% csrf_token %}
-            <div class="d-flex justify-content-between">
-                <a href="{% url 'table:device_list' %}" class="btn btn-secondary">Отмена</a>
-                <button type="submit" class="btn btn-danger">Удалить</button>
-            </div>
-        </form>
+{% block table_content %}
+<div class="content-wrapper">
+    <h2 style="color: white;">Подтверждение удаления</h2>
+
+    <div class="card" style="max-width: 1000px;">
+        <div class="card-body">
+            <p class="lead">Вы уверены, что хотите удалить устройство "{{ object }}"?</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="{% url 'table:device_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Отмена
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Удалить
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
+
+{% block footer %}
+<footer class="py-4 bg-dark mt-auto">
+    <div class="container">
+        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
+    </div>
+</footer>
+{% endblock footer %}
