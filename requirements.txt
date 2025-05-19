@@ -1,0 +1,17 @@
+# Основные зависимости
+Django==4.2.6
+psycopg2-binary==2.9.7  # Для PostgreSQL
+python-dotenv==1.0.0    # Для работы с .env файлами
+
+# Для статических файлов и production
+whitenoise==6.5.0       # Обработка статических файлов
+gunicorn==21.2.0        # Production-сервер
+
+# Дополнительные утилиты (рекомендуемые)
+django-environ==0.11.2  # Более удобная работа с окружением
+pillow==10.1.0          # Для работы с изображениями
+
+# Для разработки (можно вынести в requirements-dev.txt)
+django-debug-toolbar==4.2.0  # Панель отладки
+ipython==8.12.0         # Улучшенная shell
+django-extensions==3.2.3 # Полезные расширения
