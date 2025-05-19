@@ -24,7 +24,7 @@
 - PostgreSQL
 
 
-## ⚡ Быстрый старт
+## ⚡ Главный экран веб-приложения
 
 ![Главный экран веб-приложения](./screenshots/main_page.png)
 
@@ -34,13 +34,14 @@
 - Установленный Git
 - PostgreSQL
 
+```bash:
     1. Клонирование репозитория
 ```bash:
 git clone https://github.com/IlyaPravilovIV121/django-web-app.git
 cd django-web-app
 
     2. Настройка виртуального окружения
-bash:
+```bash:
 python -m venv venv
 
 # Активация:
@@ -51,26 +52,26 @@ source venv/bin/activate
 .\venv\Scripts\activate
 
     3.Установка зависимостей
-bash:
+```bash:
 pip install -r requirements.txt
 
     4. Настройка окружения
 Создайте файл .env на основе примера:
 
-bash:
+```bash:
 cp .env.example .env
 Отредактируйте .env (укажите свои SECRET_KEY, настройки БД и др.)
 
     5. Применение миграций
-bash:
+```bash:
 python manage.py migrate
 
     6. Создание суперпользователя (опционально)
-bash:
+```bash:
 python manage.py createsuperuser
 
     7. Запуск сервера
-bash:
+```bash:
 python manage.py runserver
 
     8. Перейти к приложению по адресу:
