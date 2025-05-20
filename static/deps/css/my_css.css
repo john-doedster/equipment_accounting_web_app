@@ -36,3 +36,17 @@ body {
   border-radius: 15px;
   font-size: 0.7rem;
 }
+.nav-link:hover, .dropdown-item:hover {
+    animation: pulse 1s infinite;
+    text-shadow: 0 0 5px #106af1, 0 0 10px #106af1, 0 0 15px #106af1, 0 0 20px #ffcc00;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* .nav-link:hover, .dropdown-item:hover {
+    text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #ffcc00, 0 0 20px #ffcc00;
+} */
