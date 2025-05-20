@@ -1,6 +1,10 @@
+import uuid
 from django.db import models
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+
+from users.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("Название категории"))
@@ -68,3 +72,18 @@ class ImportedDevice(models.Model):
     
     def __str__(self):
         return f"{self.asset_name} ({self.inventory_number})"
+
+class SavedTable(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Название таблицы")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    devices = models.ManyToManyField(ImportedDevice)
+    slug = models.SlugField(max_length=200, unique=True)
+    
+    def __str__(self):
+        return self.title
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title) + '-' + str(uuid.uuid4())[:8]
+        super().save(*args, **kwargs)   

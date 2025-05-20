@@ -52,6 +52,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'table:device_list' %}">Учёт оборудования</a>
                         </li>
+
+                        {% comment %} <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'table:saved_tables_list' %}">Мои таблицы</a>
+                        </li> {% endcomment %}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'table:saved_tables_list' %}">
+                                <i class="bi bi-collection"></i> Мои таблицы
+                            </a>
+                        </li>
+                        
+
                         {% endif %}
 
                         {% comment %} <li class="nav-item">

@@ -1,0 +1,26 @@
+{% extends "table/base.html" %}
+{% load static %}
+
+{% block table_content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Мои сохраненные таблицы</h2>
+</div>
+
+<div class="list-group">
+    {% for table in tables %}
+    <a href="{% url 'table:view_saved_table' table.slug %}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">{{ table.title }}</h5>
+            <small>{{ table.created_at|date:"d.m.Y H:i" }}</small>
+        </div>
+        <p class="mb-1">Устройств: {{ table.devices.count }}</p>
+    </a>
+    {% empty %}
+    <div class="alert alert-info">
+        У вас нет сохраненных таблиц. Сохраните текущую таблицу, чтобы она появилась здесь.
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+

@@ -1,0 +1,60 @@
+{% extends "table/base.html" %}
+{% load static %}
+
+{% block table_content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>{{ saved_table.title }}</h2>
+    <small class="text-muted">Сохранено: {{ saved_table.created_at|date:"d.m.Y H:i" }}</small>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <!-- Та же таблица, что и в imported_list.html -->
+        <thead>
+            <tr>
+                <th>№ п/п</th>
+                <th>Основное средство</th>
+                <th>Инвентарный номер</th>
+                <th>Дата принятия</th>
+                <th>Балансовая стоимость</th>
+                <th>Количество</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for device in devices %}
+            <tr>
+                <td>{{ device.row_number }}</td>
+                <td>{{ device.asset_name }}</td>
+                <td>{{ device.inventory_number }}</td>
+                <td>{{ device.acceptance_date|date:"d.m.Y" }}</td>
+                <td>{{ device.book_value }}</td>
+                <td>{{ device.quantity }}</td>
+                
+            <td>
+                <a href="{% url 'table:imported_device_detail' device.pk %}" class="btn btn-sm btn-info" title="Просмотр">
+                    <i class="bi bi-eye"></i>
+                </a>
+                <a href="{% url 'table:imported_device_edit' device.pk %}" class="btn btn-sm btn-warning" title="Редактировать">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <form action="{% url 'table:imported_device_delete' device.pk %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-danger" title="Удалить" onclick="return confirm('Вы уверены?')">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+            </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">Нет импортированных данных</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+{% endblock %}
+

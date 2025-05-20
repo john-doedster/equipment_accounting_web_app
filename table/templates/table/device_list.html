@@ -3,19 +3,29 @@
 
 {% block table_content %}
 <div class="content-wrapper" style="min-height: calc(100vh - 200px); padding-bottom: 80px;">
-    <h2 style="color: white;">Список оборудования</h2>|
-    <div class="mb-3">
-        <a href="{% url 'table:device_create' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Добавить устройство
-        </a>
-        <a href="{% url 'table:device_export' %}?{{ request.GET.urlencode }}" class="btn btn-success">
-            <i class="bi bi-file-excel"></i> Скачать в Excel
-        </a>
+        <div class="action-header mb-4">
+        <h2 class="text-white d-flex align-items-center gap-2">
+            <i class="bi bi-menu-button-wide"></i>
+            Выберите действие
+        </h2>
+        <medium class="text-white-50 ps-4">
+            <i class="bi bi-info-circle me-1"></i>
+            Нажмите на нужную опцию для перехода к следующему шагу
+    </medium>
 
+        </div>
+    <div class="mb-3 d-flex align-items-center">
+        <div class="me-auto">
+            <a href="{% url 'table:device_create' %}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Добавить устройство
+            </a>
+            <a href="{% url 'table:device_export' %}?{{ request.GET.urlencode }}" class="btn btn-success ms-2">
+                <i class="bi bi-file-excel"></i> Скачать в Excel
+            </a>
+        </div>
         <a href="{% url 'table:import_devices' %}" class="btn btn-info">
             <i class="bi bi-upload"></i> Загрузить свою таблицу
         </a>
-
     </div>
 
     <div class="card mb-4">

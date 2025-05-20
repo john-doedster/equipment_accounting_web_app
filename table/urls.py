@@ -21,4 +21,8 @@ urlpatterns = [
     path('imported-devices/<int:pk>/delete/', views.imported_device_delete, name='imported_device_delete'),
 
     path('export-edited-devices/', views.export_edited_devices, name='export_edited_devices'),
+
+    path('save-table/', views.save_current_table, name='save_table'),
+    path('saved-tables/', views.list_saved_tables, name='saved_tables_list'),
+    path('saved-table/<slug:slug>/', views.view_saved_table, name='view_saved_table'),
 ]

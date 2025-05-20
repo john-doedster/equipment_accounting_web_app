@@ -1,9 +1,11 @@
 from datetime import datetime
 import numbers
 from tkinter.font import Font
+import uuid
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.http import HttpResponse, JsonResponse
+from django.template.defaultfilters import slugify
 from django.views.generic import (
     ListView,
     CreateView,
@@ -17,7 +19,7 @@ from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
-from .models import Device, Category
+from .models import Device, Category, SavedTable
 from .forms import DeviceForm, ImportedDeviceEditForm
 import csv
 from io import StringIO
@@ -339,3 +341,40 @@ def export_edited_devices(request):
     wb.save(response)
     
     return response
+
+@login_required
+def save_current_table(request):
+    if request.method == 'POST':
+        title = request.POST.get('table_title', 'Сохраненная таблица')
+        
+        # Создаем сохраненную таблицу
+        saved_table = SavedTable.objects.create(
+            title=title,
+            creator=request.user,
+            slug=slugify(title) + '-' + str(uuid.uuid4())[:8]
+        )
+        
+        # Добавляем текущие устройства
+        devices = ImportedDevice.objects.all()
+        saved_table.devices.set(devices)
+        
+        messages.success(request, f"Таблица '{title}' успешно сохранена")
+        return redirect('table:view_saved_table', slug=saved_table.slug)
+
+@login_required
+def view_saved_table(request, slug):
+    saved_table = get_object_or_404(SavedTable, slug=slug)
+    devices = saved_table.devices.all()
+    
+    return render(request, 'table/saved_table.html', {
+        'saved_table': saved_table,
+        'devices': devices,
+        'title': saved_table.title
+    })
+
+def list_saved_tables(request):
+    tables = SavedTable.objects.filter(creator=request.user).order_by('-created_at')
+    return render(request, 'table/saved_tables_list.html', {
+        'tables': tables,
+        'title': 'Сохраненные таблицы'
+    })
