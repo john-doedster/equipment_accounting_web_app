@@ -23,6 +23,7 @@ from io import StringIO
 import pandas as pd
 from .forms import ImportExcelForm
 from .models import ImportedDevice
+from django.contrib.auth.decorators import login_required
 
 
 class DeviceListView(ListView):
@@ -179,107 +180,56 @@ def export_devices(request, format="xlsx"):
         return response
 
 
+@transaction.atomic
+@login_required
 def import_devices(request):
     if request.method == 'POST':
-        # Проверка наличия файла
-        if not request.FILES.get('file'):
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'status': 'error',
-                    'message': 'Файл не был выбран'
-                }, status=400)
-            messages.error(request, "Файл не был выбран")
-            return redirect('table:import_devices')
-        
-        file = request.FILES['file']
-        
-        # Проверка расширения файла
-        if not file.name.endswith(('.xlsx', '.xls')):
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'status': 'error',
-                    'message': 'Поддерживаются только файлы Excel (.xlsx, .xls)'
-                }, status=400)
-            messages.error(request, "Поддерживаются только файлы Excel (.xlsx, .xls)")
-            return redirect('table:import_devices')
-        
         try:
-            # Чтение Excel файла
-            df = pd.read_excel(file)
+            # Валидация файла
+            if not request.FILES.get('file'):
+                raise ValueError("Файл не был выбран")
             
-            # Проверка обязательных столбцов
-            required_columns = [
-                '№ п/п',
-                'Основное средство', 
-                'Инвентарный номер',
-                'Дата принятия к учету',
-                'Балансовая стоимость',
-                'Количество'
-            ]
+            file = request.FILES['file']
+            if not file.name.endswith(('.xlsx', '.xls')):
+                raise ValueError("Поддерживаются только файлы Excel (.xlsx, .xls)")
             
-            missing_columns = [col for col in required_columns if col not in df.columns]
-            if missing_columns:
-                error_msg = f"Отсутствуют обязательные столбцы: {', '.join(missing_columns)}"
-                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return JsonResponse({
-                        'status': 'error',
-                        'message': error_msg
-                    }, status=400)
-                messages.error(request, error_msg)
-                return redirect('table:import_devices')
+            # Чтение и обработка данных
+            df = pd.read_excel(file, engine='openpyxl')
+            required_columns = ['№ п/п', 'Основное средство', 'Инвентарный номер', 
+                              'Дата принятия к учету', 'Балансовая стоимость', 'Количество']
             
-            # Подготовка данных для импорта
+            if missing := [col for col in required_columns if col not in df.columns]:
+                raise ValueError(f"Отсутствуют обязательные столбцы: {', '.join(missing)}")
+            
             devices = []
             for index, row in df.iterrows():
                 try:
-                    # Обработка даты
-                    acceptance_date = row['Дата принятия к учету']
-                    if pd.isna(acceptance_date):
-                        acceptance_date = datetime.now().date()
-                    elif isinstance(acceptance_date, str):
-                        acceptance_date = datetime.strptime(acceptance_date, '%Y-%m-%d').date()
+                    # Обработка и валидация данных
+                    acceptance_date = (datetime.strptime(row['Дата принятия к учету'], '%Y-%m-%d').date() 
+                                      if isinstance(row['Дата принятия к учету'], str) 
+                                      else row['Дата принятия к учету'] or datetime.now().date())
                     
-                    # Проверка обязательных полей
                     if pd.isna(row['Основное средство']) or pd.isna(row['Инвентарный номер']):
                         raise ValueError(f"Строка {index+2}: отсутствует название или инвентарный номер")
                     
-                    devices.append(
-                        ImportedDevice(
-                            row_number=str(row['№ п/п']),
-                            asset_name=str(row['Основное средство']),
-                            inventory_number=str(row['Инвентарный номер']),
-                            acceptance_date=acceptance_date,
-                            book_value=float(row['Балансовая стоимость']),
-                            quantity=int(row['Количество'])
-                        )
-                    )
+                    devices.append(ImportedDevice(
+                        row_number=str(row['№ п/п']),
+                        asset_name=str(row['Основное средство']),
+                        inventory_number=str(row['Инвентарный номер']),
+                        acceptance_date=acceptance_date,
+                        book_value=float(row['Балансовая стоимость']),
+                        quantity=int(row['Количество'])
+                    ))
                 except Exception as e:
-                    error_msg = f"Ошибка в строке {index+2}: {str(e)}"
-                    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                        return JsonResponse({
-                            'status': 'error',
-                            'message': error_msg
-                        }, status=400)
-                    messages.error(request, error_msg)
-                    return redirect('table:import_devices')
+                    raise ValueError(f"Строка {index+2}: {str(e)}") from e
             
-            # Проверка на дубликаты инвентарных номеров
-            inventory_numbers = [d.inventory_number for d in devices]
-            if len(inventory_numbers) != len(set(inventory_numbers)):
-                duplicates = {num for num in inventory_numbers if inventory_numbers.count(num) > 1}
-                error_msg = f"Обнаружены дубликаты инвентарных номеров: {', '.join(duplicates)}"
-                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                    return JsonResponse({
-                        'status': 'error',
-                        'message': error_msg
-                    }, status=400)
-                messages.error(request, error_msg)
-                return redirect('table:import_devices')
+            # Проверка дубликатов
+            if len(inv_nums := [d.inventory_number for d in devices]) != len(set(inv_nums)):
+                duplicates = {n for n in inv_nums if inv_nums.count(n) > 1}
+                raise ValueError(f"Дубликаты инвентарных номеров: {', '.join(duplicates)}")
             
-            # Сохранение в транзакции
-            with transaction.atomic():
-                ImportedDevice.objects.bulk_create(devices)
-            
+            # Сохранение
+            ImportedDevice.objects.bulk_create(devices)
             success_msg = f"Успешно импортировано {len(devices)} устройств"
             
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -293,29 +243,22 @@ def import_devices(request):
             return redirect('table:imported_devices_list')
             
         except Exception as e:
-            error_msg = f"Ошибка при обработке файла: {str(e)}"
+            error_msg = str(e)
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({
-                    'status': 'error',
-                    'message': error_msg
-                }, status=400)
+                return JsonResponse({'status': 'error', 'message': error_msg}, status=400)
             messages.error(request, error_msg)
+            return redirect('table:import_devices')
     
-    # GET запрос или ошибка валидации
+    # GET запрос
     form = ImportExcelForm()
-    
-    context = {
-            'form': form,
-            'title': _("Импорт устройств"),  # Добавляем заголовок
-        }
+    return render(request, 'table/import.html', {
+        'form': form,
+        'title': _("Импорт устройств"),
+    })
 
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        return JsonResponse({
-            'status': 'error',
-            'message': 'Неверный метод запроса'
-        }, status=400)
-    
-    return render(request, 'table/import.html', context)
+
+
+
 
 def imported_devices_list(request):
     devices = ImportedDevice.objects.all().order_by('-created_at')

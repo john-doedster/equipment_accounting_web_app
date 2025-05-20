@@ -21,13 +21,11 @@
                     <button type="button" class="btn btn-outline-secondary" id="fileButton">
                         <i class="bi bi-folder2-open"></i> Выбрать файл
                     </button>
-                     {% comment %} <script src="{% static 'js/button-handler.js' %}"></script> {% endcomment %}
                 </div>
                 
                 <button type="submit" class="btn btn-success" id="submitButton" disabled>
                     <i class="bi bi-upload"></i> Импортировать
                 </button>
-                {% comment %} <script src="{% static 'js/button-handler.js' %}"></script> {% endcomment %}
             </form>
         </div>
     </div>
@@ -35,64 +33,9 @@
 
 
 {% block scripts %}
-<script src="{% static 'js/import-form-handler.js' %}"></script>
+<script src="{% static 'js/button_input_handler.js' %}"></script>
 {% endblock %}
 
-{% comment %} {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('fileInput');
-    const fileButton = document.getElementById('fileButton');
-    const fileLabel = document.getElementById('fileLabel');
-    const fileName = document.getElementById('fileName');
-    const submitButton = document.getElementById('submitButton');
-    
-    fileButton.addEventListener('click', function() {
-        fileInput.click();
-    });
-    
-    fileInput.addEventListener('change', function(e) {
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            fileName.textContent = file.name;
-            fileName.style.display = 'block';
-            fileLabel.textContent = 'Выбран файл:';
-            submitButton.disabled = false;
-            
-            if (!file.name.match(/\.(xlsx|xls)$/i)) {
-                alert('Пожалуйста, выберите файл Excel (.xlsx или .xls)');
-                this.value = '';
-                fileName.style.display = 'none';
-                fileLabel.textContent = 'Выберите файл Excel';
-                submitButton.disabled = true;
-            }
-        }
-    });
-    
-    document.getElementById('importForm').addEventListener('submit', function(e) {
-        if (!fileInput.files.length) {
-            e.preventDefault();
-            alert('Пожалуйста, выберите файл для загрузки');
-            return false;
-        }
-        
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> Идет загрузка...';
-    });
-});
-</script> {% endblock %} {% endcomment %}
-
-
-<style>
-.spinner {
-    animation: spin 1s linear infinite;
-    display: inline-block;
-}
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-</style>
 {% endblock %}
 
 {% comment %} {% block footer %}

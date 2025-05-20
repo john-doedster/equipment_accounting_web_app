@@ -65,12 +65,6 @@ MIDDLEWARE = [
 
 ]
 
-# Базовые настройки CSP
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_SCRIPT_SRC = ("'self'",)
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # разрешаем inline-стили
-CSP_IMG_SRC = ("'self'", "data:")
-
 ROOT_URLCONF = 'app.urls'
 
 TEMPLATES = [
@@ -144,7 +138,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
