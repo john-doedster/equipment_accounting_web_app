@@ -1,0 +1,138 @@
+/* static/deps/css/neon_contacts.css */
+
+.neon-contact-container {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(10px);
+    padding: 2rem;
+    border-radius: 16px;
+    margin-top: 2rem;
+    border: 1px solid rgba(94, 234, 212, 0.2);
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.3),
+                0 0 30px rgba(94, 234, 212, 0.1);
+    margin-bottom: 3rem; 
+}
+
+.neon-address-block {
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(94, 234, 212, 0.3) !important;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.2);
+    max-width: 350px;
+    transition: all 0.3s ease;
+}
+
+.neon-address-block:hover {
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.4);
+    transform: translateY(-2px);
+}
+
+.neon-address-block h3 {
+    color: #5eead4;
+    text-shadow: 0 0 5px rgba(94, 234, 212, 0.5);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.neon-contact-icon {
+    color: #5eead4;
+    margin-right: 10px;
+    text-shadow: 0 0 5px rgba(94, 234, 212, 0.5);
+}
+
+.neon-address-block p {
+    margin-bottom: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #e2e8f0;
+}
+
+.neon-address-link {
+    text-decoration: none; /* убираем подчеркивание */
+    display: inline-block; /* чтобы ссылка правильно оборачивала блок */
+    max-width: 350px; /* сохраняем максимальную ширину как у блока */
+    width: 100%;
+}
+
+.neon-address-link:hover .neon-address-block {
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.4);
+    transform: translateY(-2px);
+    cursor: pointer; /* меняем курсор при наведении */
+}
+
+.neon-map-container {
+    margin-bottom: 30px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.3);
+    border: 1px solid rgba(94, 234, 212, 0.2);
+}
+
+.neon-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.neon-contact-card {
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(94, 234, 212, 0.3) !important;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.2);
+    height: 100%;
+    text-align: center;
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.neon-contact-card:hover {
+    box-shadow: 0 0 20px rgba(94, 234, 212, 0.4);
+    transform: translateY(-3px);
+}
+
+.neon-contact-card h3 {
+    color: #5eead4;
+    text-shadow: 0 0 5px rgba(94, 234, 212, 0.5);
+    margin-bottom: 1rem;
+}
+
+.neon-contact-card p {
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+}
+
+.neon-contact-card strong {
+    color: #5eead4;
+}
+
+.neon-social-links {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.neon-social-btn {
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(94, 234, 212, 0.3) !important;
+    color: #e2e8f0 !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px rgba(94, 234, 212, 0.2);
+}
+
+.neon-social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.4);
+    color: #5eead4 !important;
+    border-color: #5eead4 !important;
+}
+
+@media (max-width: 768px) {
+    .neon-contact-grid {
+        grid-template-columns: 1fr;
+    }
+}

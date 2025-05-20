@@ -3,166 +3,9 @@
 
 {% block css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<style>
-    /* Основные стили */
-    :root {
-        --primary-color: #6e8efb;
-        --secondary-color: #a777e3;
-        --dark-color: rgb(68, 22, 123);
-        --light-color: #f8f9fa;
-        --text-dark: #333;
-        --text-light: #fff;
-    }
-    
-    .about-hero {
-        background: linear-gradient(135deg, var(--dark-color), var(--secondary-color));
-        color: var(--text-light);
-        padding: 4rem 0;
-        margin-bottom: 3rem;
-        text-align: center;
-        border-radius: 14px;
-        transition: all 0.4s ease;
-        transform: scale(1);
-    }
-
-    .about-hero:hover {
-        transform: scale(1.02);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    
-    .bg-light.about-section {
-        position: relative;
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
-        margin: 2rem auto;
-        z-index: 1;
-        color: #000;
-    }
-    .bg-light.about-section .section-title,
-    .bg-light.about-section .role-card h4,
-    .bg-light.about-section .role-card p {
-        color: #000; /* Явное указание черного цвета */
-        }
-    
-    .section-title {
-        position: relative;
-        margin-bottom: 2rem;
-        color: white; /* Белый цвет текста */
-        text-align: center; /* Центрирование заголовка */
-        font-size: 3rem; /* Размер шрифта */
-    }
-
-    .section-title:after {
-        content: '';
-        position: absolute;
-        bottom: -15px; /* Отступ линии от текста */
-        left: 50%; /* Начало от центра */
-        transform: translateX(-50%); /* Точное центрирование */
-        width: 500px; /* Увеличенная длина линии */
-        height: 5px; /* Толщина линии */
-        background: #6e8efb; /* Цвет линии */
-        border-radius: 3px; /* Закругление концов линии */
-    }
-    
-    /* Карточки особенностей */
-    .feature-card {
-        border: none;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-        height: 100%;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        padding: 2rem;
-        text-align: center;
-        background: white;
-        margin: 0 auto 1.5rem;
-        max-width: 300px;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
-    }
-    
-    .feature-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1.5rem;
-        color: var(--primary-color);
-        border-radius: 14px;
-    }
-    
-    /* Карточки ролей */
-    .role-card {
-        border-left: 4px solid var(--secondary-color);
-        transition: all 0.3s ease;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
-        background: white;
-        border-radius: 14px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        height: 100%;
-        transform: scale(1);
-    }
-    
-    .role-card:hover {
-        border-left: 4px solid var(--primary-color);
-        background-color: var(--light-color);
-        transform: scale(1.05);
-        z-index: 10;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
-    
-    .role-icon {
-        color: var(--secondary-color);
-        margin-right: 10px;
-        font-size: 1.2rem;
-        border-radius: 14px;
-    }
-    
-    /* Градиентный блок */
-    .gradient-container {
-        max-width: 1300px;
-        margin: 0 auto 4rem;
-        padding: 0 1rem;
-    }
-    
-    .gradient-border {
-        position: relative;
-        padding: 2.5rem;
-        border-radius: 14px;
-        background: white;
-        text-align: center;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        transition: all 0.4s ease;
-        transform: scale(1);
-    }
-    
-    .gradient-border:hover {
-        transform: scale(1.03);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    }
-
-    .gradient-border::before {
-        content: '';
-        position: absolute;
-        top: -2px;
-        left: -2px;
-        right: -2px;
-        bottom: -2px;
-        background: linear-gradient(45deg, var(--primary-color), var(--dark-color));
-        z-index: -1;
-        border-radius: 14px;
-    }
-    
-    /* Футер */
-    footer {
-        padding: 2.5rem 0;
-        background: var(--dark-color);
-        color: var(--text-light);
-        text-align: center;
-        margin-top: 4rem;
-    }
-</style>
+    <link rel="stylesheet" href="{% static 'deps/css/neon-auth.css' %}">
+    <link rel="stylesheet" href="{% static 'deps/css/neon_about.css' %}">
+    <link rel="stylesheet" href="{% static 'deps/css/my_css.css' %}">
 {% endblock css %}
 
 {% block content %}
@@ -177,7 +20,7 @@
 <!-- Основной текст -->
 <div class="gradient-container">
     <div class="gradient-border">
-        <div class="col-lg-10 mx-auto text-white fs-4">
+        <div class="col-lg-10 mx-auto fs-4">
             {{ text_on_page }}
         </div>
     </div>
@@ -202,7 +45,7 @@
 </div>
 
 <!-- Для кого -->
-<div class="about-section bg-light">
+<div class="about-section">
     <div class="container">
         <h2 class="section-title">Для кого этот сервис?</h2>
         <div class="row justify-content-center">
@@ -217,6 +60,7 @@
         </div>
     </div>
 </div>
+
 {% endblock content %}
 
 {% block footer %}

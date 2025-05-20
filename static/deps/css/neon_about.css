@@ -1,0 +1,189 @@
+/* static/deps/css/neon_about.css */
+/* Основные неоновые стили */
+:root {
+    --neon-primary: #5eead4;
+    --neon-secondary: #38b6ff;
+    --neon-dark: #0f172a;
+    --neon-light: #e2e8f0;
+    --neon-text-light: #f8fafc;
+    --neon-text-dark: #94a3b8;
+    --neon-accent: rgba(94, 234, 212, 0.3);
+}
+
+.about-hero {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(56, 182, 255, 0.8));
+    color: var(--neon-text-light);
+    padding: 5rem 0;
+    margin-bottom: 3rem;
+    text-align: center;
+    border-radius: 14px;
+    transition: all 0.4s ease;
+    transform: scale(1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(94, 234, 212, 0.2);
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.3),
+                0 0 30px rgba(94, 234, 212, 0.1);
+}
+
+.about-hero:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(94, 234, 212, 0.5),
+                0 0 40px rgba(94, 234, 212, 0.2);
+}
+
+.about-section {
+    position: relative;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 3rem;
+    margin: 2rem auto;
+    z-index: 1;
+    color: var(--neon-text-light);
+    border: 1px solid rgba(94, 234, 212, 0.2);
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.2);
+}
+
+.section-title {
+    position: relative;
+    margin-bottom: 3rem;
+    color: var(--neon-primary);
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-shadow: 0 0 5px var(--neon-primary),
+                0 0 10px rgba(94, 234, 212, 0.5);
+}
+
+.section-title:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--neon-primary), transparent);
+    border-radius: 3px;
+    box-shadow: 0 0 10px var(--neon-primary);
+}
+
+/* Карточки особенностей */
+.feature-card {
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    height: 100%;
+    padding: 2rem;
+    text-align: center;
+    background: rgba(15, 23, 42, 0.6);
+    margin: 0 auto 1.5rem;
+    max-width: 300px;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.1);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--neon-primary);
+    box-shadow: 0 0 20px rgba(94, 234, 212, 0.3);
+}
+
+.feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--neon-primary);
+    text-shadow: 0 0 10px var(--neon-primary);
+}
+
+/* Карточки ролей */
+.role-card {
+    border-left: 4px solid var(--neon-secondary);
+    transition: all 0.3s ease;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 14px;
+    backdrop-filter: blur(5px);
+    height: 100%;
+    transform: scale(1);
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.1);
+}
+
+.role-card:hover {
+    border-left: 4px solid var(--neon-primary);
+    background-color: rgba(94, 234, 212, 0.1);
+    transform: scale(1.05);
+    z-index: 10;
+    box-shadow: 0 0 25px rgba(94, 234, 212, 0.3);
+}
+
+.role-icon {
+    color: var(--neon-primary);
+    margin-right: 10px;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px var(--neon-primary);
+}
+
+/* Градиентный блок */
+.gradient-container {
+    max-width: 1300px;
+    margin: 0 auto 4rem;
+    padding: 0 1rem;
+}
+
+.gradient-border {
+    position: relative;
+    padding: 3rem;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.7);
+    text-align: center;
+    transition: all 0.4s ease;
+    transform: scale(1);
+    backdrop-filter: blur(10px);
+    color: var(--neon-text-light);
+    border: 1px solid rgba(94, 234, 212, 0.2);
+}
+
+.gradient-border:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 30px rgba(94, 234, 212, 0.3);
+}
+
+.gradient-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, rgba(94, 234, 212, 0.3), rgba(56, 182, 255, 0.3));
+    z-index: -1;
+    border-radius: 16px;
+    animation: gradientAnimation 8s ease infinite;
+    background-size: 200% 200%;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Футер */
+
+
+
+/* Текст */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--neon-primary);
+    text-shadow: 0 0 5px rgba(94, 234, 212, 0.5);
+}
+
+p {
+    color: var(--neon-text-light);
+}
+
+.text-muted {
+    color: var(--neon-text-dark) !important;
+}

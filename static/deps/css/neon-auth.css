@@ -1,0 +1,243 @@
+/* static/deps/css/neon-auth.css */
+.neon-form {
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(94, 234, 212, 0.2);
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.3),
+                0 0 30px rgba(94, 234, 212, 0.1);
+    color: #e2e8f0;
+}
+
+.neon-title {
+    color: #5eead4;
+    text-shadow: 0 0 5px #5eead4,
+                0 0 10px rgba(94, 234, 212, 0.5);
+    font-weight: 600;
+}
+
+.neon-input {
+    background-color: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(94, 234, 212, 0.3) !important;
+    color: #e2e8f0 !important;
+    transition: all 0.3s ease;
+}
+
+.neon-input:focus {
+    border-color: #5eead4 !important;
+    box-shadow: 0 0 0 0.25rem rgba(94, 234, 212, 0.25) !important;
+    background-color: rgba(15, 23, 42, 0.7) !important;
+}
+
+.neon-input::placeholder {
+    color: #94a3b8 !important;
+}
+
+.neon-label {
+    color: #94a3b8;
+}
+
+.neon-btn {
+    background: linear-gradient(135deg, rgba(94, 234, 212, 0.8), rgba(56, 182, 255, 0.8));
+    border: none;
+    color: #0f172a;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.5);
+}
+
+.neon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(94, 234, 212, 0.8);
+}
+
+.neon-link {
+    color: #5eead4;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.neon-link:hover {
+    color: #38b6ff;
+    text-shadow: 0 0 5px rgba(56, 182, 255, 0.5);
+}
+
+.neon-divider {
+    border-color: rgba(94, 234, 212, 0.3);
+}
+
+/* Стили для корзины */
+.neon-cart-item {
+    background-color: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(94, 234, 212, 0.2);
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.neon-cart-header {
+    background-color: rgba(15, 23, 42, 0.8);
+    padding: 1rem;
+    border-bottom: 1px solid rgba(94, 234, 212, 0.1);
+}
+
+.neon-product-title {
+    color: #e2e8f0;
+    margin: 0;
+    font-weight: 500;
+}
+
+.neon-cart-body {
+    padding: 1rem;
+}
+
+.neon-input-group {
+    justify-content: center;
+}
+
+.neon-quantity-btn {
+    background-color: rgba(94, 234, 212, 0.1);
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    color: #5eead4;
+    padding: 0.25rem 0.75rem;
+    transition: all 0.3s ease;
+}
+
+.neon-quantity-btn:hover {
+    background-color: rgba(94, 234, 212, 0.3);
+    transform: translateY(-1px);
+}
+
+.neon-quantity-input {
+    background-color: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(94, 234, 212, 0.3) !important;
+    color: #e2e8f0 !important;
+    text-align: center;
+    max-width: 50px;
+}
+
+.neon-price-text {
+    color: #94a3b8;
+    margin: 0;
+}
+
+.neon-price {
+    color: #5eead4;
+    font-weight: 600;
+}
+
+.neon-delete-btn {
+    color: #f87171;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 0.5rem;
+}
+
+.neon-delete-btn:hover {
+    color: #ef4444;
+    transform: scale(1.1);
+}
+
+.neon-cart-total {
+    background-color: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.neon-total-info {
+    color: #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.neon-total-quantity {
+    color: #5eead4;
+}
+
+.neon-total-price {
+    color: #38b6ff;
+    margin-left: 1rem;
+}
+
+
+/* Стили для кнопки корзины */
+.neon-cart-btn {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.neon-cart-btn:hover {
+    background: rgba(94, 234, 212, 0.2);
+    box-shadow: 0 0 10px rgba(94, 234, 212, 0.5);
+}
+
+.neon-badge {
+    background: linear-gradient(135deg, rgba(94, 234, 212, 0.8), rgba(56, 182, 255, 0.8));
+    color: #0f172a;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}
+
+/* Стили для модального окна */
+.neon-modal {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(94, 234, 212, 0.3);
+    box-shadow: 0 0 30px rgba(94, 234, 212, 0.4);
+    color: #e2e8f0;
+    backdrop-filter: blur(10px);
+}
+
+.neon-modal-header {
+    border-bottom: 1px solid rgba(94, 234, 212, 0.2);
+    padding: 1.5rem;
+}
+
+.neon-modal-title {
+    color: #5eead4;
+    text-shadow: 0 0 5px rgba(94, 234, 212, 0.5);
+    font-weight: 600;
+}
+
+.neon-close-btn {
+    filter: invert(89%) sepia(17%) saturate(704%) hue-rotate(110deg) brightness(102%) contrast(91%);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.neon-close-btn:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+
+.neon-modal-body {
+    padding: 2rem;
+}
+
+.neon-btn-lg {
+    background: linear-gradient(135deg, rgba(94, 234, 212, 0.8), rgba(56, 182, 255, 0.8));
+    border: none;
+    color: #0f172a;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.5);
+    border-radius: 50px;
+}
+
+.neon-btn-lg:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(94, 234, 212, 0.8);
+}
