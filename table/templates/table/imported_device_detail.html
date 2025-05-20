@@ -1,0 +1,65 @@
+{% extends "table/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-info-circle"></i> Подробная информация об устройстве
+                </h4>
+                <a href="{% url 'table:imported_devices_list' %}" class="btn btn-light btn-sm">
+                    <i class="bi bi-arrow-left"></i> Назад
+                </a>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5 class="border-bottom pb-2">Основная информация</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">№ п/п:</dt>
+                        <dd class="col-sm-8">{{ device.row_number }}</dd>
+                        
+                        <dt class="col-sm-4">Основное средство:</dt>
+                        <dd class="col-sm-8">{{ device.asset_name }}</dd>
+                        
+                        <dt class="col-sm-4">Инвентарный номер:</dt>
+                        <dd class="col-sm-8">{{ device.inventory_number }}</dd>
+                    </dl>
+                </div>
+                
+                <div class="col-md-6">
+                    <h5 class="border-bottom pb-2">Финансовая информация</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Дата принятия:</dt>
+                        <dd class="col-sm-8">{{ device.acceptance_date|date:"d.m.Y" }}</dd>
+                        
+                        <dt class="col-sm-4">Балансовая стоимость:</dt>
+                        <dd class="col-sm-8">{{ device.book_value }} руб.</dd>
+                        
+                        <dt class="col-sm-4">Количество:</dt>
+                        <dd class="col-sm-8">{{ device.quantity }}</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'table:imported_device_edit' device.pk %}" class="btn btn-warning me-2">
+                    <i class="bi bi-pencil"></i> Редактировать
+                </a>
+                <form action="{% url 'table:imported_device_delete' device.pk %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" 
+                            onclick="return confirm('Вы уверены, что хотите удалить это устройство?')">
+                        <i class="bi bi-trash"></i> Удалить
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

@@ -14,4 +14,9 @@ urlpatterns = [
     path('export/', export_devices_to_excel, name='device_export'),
     path('import/', views.import_devices, name='import_devices'),
     path('imported-devices/', views.imported_devices_list, name='imported_devices_list'),
+
+
+    path('imported-devices/<int:pk>/', views.imported_device_detail, name='imported_device_detail'),
+    path('imported-devices/<int:pk>/edit/', views.imported_device_edit, name='imported_device_edit'),
+    path('imported-devices/<int:pk>/delete/', views.imported_device_delete, name='imported_device_delete'),
 ]

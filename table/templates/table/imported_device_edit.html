@@ -1,0 +1,75 @@
+{% extends "table/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">
+                    <i class="bi bi-pencil-square"></i> {{ title }}
+                </h4>
+                <a href="{% url 'table:imported_device_detail' device.pk %}" class="btn btn-light btn-sm">
+                    <i class="bi bi-x-lg"></i> Отмена
+                </a>
+            </div>
+        </div>
+        
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.row_number|as_crispy_field }}
+                        {{ form.asset_name|as_crispy_field }}
+                        {{ form.inventory_number|as_crispy_field }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.acceptance_date|as_crispy_field }}
+                        {{ form.book_value|as_crispy_field }}
+                        {{ form.quantity|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-check-lg"></i> Сохранить
+                    </button>
+                    <a href="{% url 'table:imported_device_detail' device.pk %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Назад
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Инициализация datepicker
+    $("#id_acceptance_date").flatpickr({
+        dateFormat: "Y-m-d",
+        locale: "ru"
+    });
+    
+    // Маска для числовых полей
+    $("#id_book_value").inputmask({
+        alias: 'numeric',
+        groupSeparator: ' ',
+        autoGroup: true,
+        digits: 2,
+        digitsOptional: false,
+        placeholder: '0'
+    });
+});
+</script>
+{% endblock %}

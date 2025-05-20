@@ -13,17 +13,18 @@ from django.views.generic import (
 from django.urls import reverse, reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 from .models import Device, Category
-from .forms import DeviceForm
+from .forms import DeviceForm, ImportedDeviceEditForm
 import csv
 from io import StringIO
 import pandas as pd
 from .forms import ImportExcelForm
 from .models import ImportedDevice
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 
 class DeviceListView(ListView):
@@ -257,6 +258,9 @@ def import_devices(request):
     })
 
 
+
+
+
 def imported_devices_list(request):
     devices = ImportedDevice.objects.all().order_by('-created_at')
     context = {
@@ -264,3 +268,40 @@ def imported_devices_list(request):
         'title': _("Импортированные устройства"),  # Добавляем заголовок
     }
     return render(request, 'table/imported_list.html', context)
+
+
+
+@login_required
+def imported_device_detail(request, pk):
+    device = get_object_or_404(ImportedDevice, pk=pk)
+    return render(request, 'table/imported_device_detail.html', {
+        'device': device,
+        'title': _("Просмотр устройства"),
+    })
+
+@login_required
+def imported_device_edit(request, pk):
+    device = get_object_or_404(ImportedDevice, pk=pk)
+    
+    if request.method == 'POST':
+        form = ImportedDeviceEditForm(request.POST, instance=device)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("Устройство успешно обновлено"))
+            return redirect('table:imported_device_detail', pk=device.pk)
+    else:
+        form = ImportedDeviceEditForm(instance=device)
+    
+    return render(request, 'table/imported_device_edit.html', {
+        'form': form,
+        'device': device,
+        'title': _("Редактирование устройства"),
+    })
+
+@login_required
+@require_POST
+def imported_device_delete(request, pk):
+    device = get_object_or_404(ImportedDevice, pk=pk)
+    device.delete()
+    messages.success(request, _("Устройство успешно удалено"))
+    return redirect('table:imported_devices_list')

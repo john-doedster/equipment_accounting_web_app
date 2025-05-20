@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
-from .models import Device, Category
+from .models import Device, Category, ImportedDevice
 
 
 class DeviceForm(forms.ModelForm):
@@ -107,3 +107,15 @@ class ImportExcelForm(forms.Form):
             if not file.name.endswith((".xlsx", ".xls")):
                 raise forms.ValidationError("Неподдерживаемый формат файла")
         return file
+    
+class ImportedDeviceEditForm(forms.ModelForm):
+    class Meta:
+        model = ImportedDevice
+        fields = ['row_number', 'asset_name', 'inventory_number', 
+                 'acceptance_date', 'book_value', 'quantity']
+        
+        widgets = {
+            'acceptance_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'book_value': forms.NumberInput(attrs={'step': '0.01', 'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'min': '1', 'class': 'form-control'}),
+        }
