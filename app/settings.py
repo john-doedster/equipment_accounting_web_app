@@ -86,6 +86,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'app.wsgi.application'
 
 
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+CSRF_COOKIE_NAME = 'csrftoken'
+
+
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 

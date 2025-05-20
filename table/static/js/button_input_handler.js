@@ -1,54 +1,40 @@
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Script loaded'); // Проверка загрузки
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    console.log('Форма отправляется...');
     
-    const fileInput = document.getElementById('fileInput');
-    const fileButton = document.getElementById('fileButton');
-    const fileLabel = document.getElementById('fileLabel');
-    const fileName = document.getElementById('fileName');
-    const submitButton = document.getElementById('submitButton');
-    const form = document.getElementById('importForm');
-
-    if (!fileInput || !form) {
-        console.error('Элементы не найдены! Проверьте ID в HTML.');
-        return;
+    if (!fileInput.files.length) {
+        alert('Пожалуйста, выберите файл для загрузки');
+        return false;
     }
-
-    fileButton.addEventListener('click', function() {
-        console.log('Кнопка "Выбрать файл" нажата');
-        fileInput.click();
-    });
-
-    fileInput.addEventListener('change', function(e) {
-        console.log('Файл выбран', this.files);
-        
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            fileName.textContent = file.name;
-            fileName.style.display = 'block';
-            fileLabel.textContent = 'Выбран файл:';
+    
+    submitButton.disabled = true;
+    submitButton.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> Идет загрузка...';
+    
+    // Создаем FormData и добавляем файл
+    const formData = new FormData(form);
+    
+    // AJAX-запрос
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            window.location.href = data.redirect_url;
+        } else {
+            alert(data.message);
             submitButton.disabled = false;
-
-            if (!file.name.match(/\.(xlsx|xls)$/i)) {
-                alert('Пожалуйста, выберите файл Excel (.xlsx или .xls)');
-                this.value = '';
-                fileName.style.display = 'none';
-                fileLabel.textContent = 'Выберите файл Excel';
-                submitButton.disabled = true;
-            }
+            submitButton.innerHTML = '<i class="bi bi-upload"></i> Импортировать';
         }
-    });
-
-    form.addEventListener('submit', function(e) {
-        console.log('Форма отправляется...');
-        
-        if (!fileInput.files.length) {
-            e.preventDefault();
-            alert('Пожалуйста, выберите файл для загрузки');
-            return false;
-        }
-        
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="bi bi-arrow-repeat spinner"></i> Идет загрузка...';
-        console.log('Форма валидна, отправка данных');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при загрузке файла');
+        submitButton.disabled = false;
+        submitButton.innerHTML = '<i class="bi bi-upload"></i> Импортировать';
     });
 });

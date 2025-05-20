@@ -257,9 +257,6 @@ def import_devices(request):
     })
 
 
-
-
-
 def imported_devices_list(request):
     devices = ImportedDevice.objects.all().order_by('-created_at')
     context = {
