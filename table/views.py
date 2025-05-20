@@ -1,6 +1,7 @@
 from datetime import datetime
 import numbers
 from tkinter.font import Font
+from django.core.paginator import Paginator
 from django.db import transaction
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import (
@@ -258,14 +259,15 @@ def import_devices(request):
     })
 
 
-
-
-
 def imported_devices_list(request):
-    devices = ImportedDevice.objects.all().order_by('-created_at')
+    device_list = ImportedDevice.objects.all().order_by('-created_at')
+    paginator = Paginator(device_list, 10)  # 10 элементов на странице
+    page_number = request.GET.get('page')
+    devices = paginator.get_page(page_number)
+    
     context = {
         'devices': devices,
-        'title': _("Импортированные устройства"),  # Добавляем заголовок
+        'title': _("Импортированные устройства"),
     }
     return render(request, 'table/imported_list.html', context)
 
@@ -305,3 +307,35 @@ def imported_device_delete(request, pk):
     device.delete()
     messages.success(request, _("Устройство успешно удалено"))
     return redirect('table:imported_devices_list')
+
+#Скачивание отредактированных данных из загруженной таблицы Excel
+
+def export_edited_devices(request):
+    # Создаем книгу Excel
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Edited Devices"
+
+    # Заголовки
+    headers = ['№ п/п', 'Основное средство', 'Инвентарный номер', 
+               'Дата принятия', 'Балансовая стоимость', 'Количество']
+    ws.append(headers)
+
+    # Данные
+    devices = ImportedDevice.objects.all().order_by('-created_at')
+    for device in devices:
+        ws.append([
+            device.row_number,
+            device.asset_name,
+            device.inventory_number,
+            device.acceptance_date.strftime('%d.%m.%Y'),
+            device.book_value,
+            device.quantity
+        ])
+
+    # Настройка ответа
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=edited.xlsx'
+    wb.save(response)
+    
+    return response

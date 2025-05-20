@@ -19,4 +19,6 @@ urlpatterns = [
     path('imported-devices/<int:pk>/', views.imported_device_detail, name='imported_device_detail'),
     path('imported-devices/<int:pk>/edit/', views.imported_device_edit, name='imported_device_edit'),
     path('imported-devices/<int:pk>/delete/', views.imported_device_delete, name='imported_device_delete'),
+
+    path('export-edited-devices/', views.export_edited_devices, name='export_edited_devices'),
 ]
