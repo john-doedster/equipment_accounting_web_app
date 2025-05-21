@@ -384,8 +384,14 @@ def view_saved_table(request, slug):
         'title': saved_table.title
     })
 
+from django.db.models import Count
+
+from django.db.models import Count
+
 def list_saved_tables(request):
-    tables = SavedTable.objects.filter(creator=request.user).order_by('-created_at')
+    tables = SavedTable.objects.filter(creator=request.user)\
+                             .annotate(device_count=Count('devices'))\
+                             .order_by('-created_at')
     return render(request, 'table/saved_tables_list.html', {
         'tables': tables,
         'title': 'Сохраненные таблицы'

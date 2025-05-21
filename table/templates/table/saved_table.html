@@ -5,30 +5,32 @@
 <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-dark rounded">
     <div>
         <h2 class="text-white mb-0">
-            <i class="bi bi-table"></i> Таблица: {{ saved_table.title }}
+            <i class="bi bi-table me-2"></i>Таблица: {{ saved_table.title }}
         </h2>
         <small class="text-white-50">Сохранено: {{ saved_table.created_at|date:"d.m.Y H:i" }}</small>
     </div>
     <div class="btn-group">
-        {% comment %} <a href="{% url 'table:edit_saved_table' saved_table.slug %}" class="btn btn-sm btn-outline-light">
-            <i class="bi bi-pencil"></i> Редактировать таблицу
-        </a> {% endcomment %}
+
+        <a href="{% url 'table:edit_saved_table' saved_table.slug %}" class="btn btn-sm btn-light">
+            <i class="bi bi-pencil-square me-1"></i>Редактировать
+        </a>
+
         <form method="post" action="{% url 'table:delete_saved_table' saved_table.slug %}" class="d-inline">
             {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Удалить эту таблицу?')">
-                <i class="bi bi-trash"></i> Удалить
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Удалить эту таблицу?')">
+                <i class="bi bi-trash me-1"></i>Удалить
             </button>
         </form>
     </div>
 </div>
 
 <div class="mb-3">
-    <a href="{% url 'table:saved_tables_list' %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left"></i> К списку таблиц
+    <a href="{% url 'table:saved_tables_list' %}" class="btn btn-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>К списку таблиц
     </a>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive mb-4">
     <table class="table table-striped table-hover">
         <thead class="table-dark">
             <tr>
@@ -51,21 +53,23 @@
                 <td>{{ device.book_value }}</td>
                 <td>{{ device.quantity }}</td>
                 <td>
-                    <div class="btn-group btn-group-sm">
+                    
+                    
+                    <!-- Действия -->
+                    <div class="btn-group btn-group-sm" role="group">
                         <a href="{% url 'table:imported_device_detail' device.pk %}?table_slug={{ saved_table.slug }}" 
                            class="btn btn-info" title="Просмотр">
-                            <i class="bi bi-eye"></i>
+                            <i class="bi bi-eye-fill"></i>
                         </a>
-                        <a href="{% url 'table:imported_device_edit' device.pk %}?table_slug={{ saved_table.slug }}" 
-                           class="btn btn-warning" title="Редактировать">
-                            <i class="bi bi-pencil"></i>
-                        </a>
+
+
                         <form action="{% url 'table:imported_device_delete' device.pk %}" method="post" class="d-inline">
+                                               
                             {% csrf_token %}
                             <input type="hidden" name="table_slug" value="{{ saved_table.slug }}">
                             <button type="submit" class="btn btn-danger" title="Удалить" 
                                     onclick="return confirm('Удалить этот элемент?')">
-                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-trash-fill"></i>
                             </button>
                         </form>
                     </div>
@@ -81,4 +85,7 @@
         </tbody>
     </table>
 </div>
+
+<!-- Пагинация -->
+
 {% endblock %}

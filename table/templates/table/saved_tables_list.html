@@ -6,11 +6,13 @@
 {% endblock %}
 
 {% block table_content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-save me-2"></i>Мои сохраненные таблицы</h2>
-    <a href="{% url 'table:imported_devices_list' %}" class="btn btn-outline-primary">
-        <i class="fas fa-arrow-left"></i> К текущей таблице
-    </a>
+<div class="bg-dark p-3 rounded mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-white"><i class="fas fa-save me-2 text-white"></i>Мои сохраненные таблицы</h2>
+        <a href="{% url 'table:imported_devices_list' %}" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> К текущей таблице
+        </a>
+    </div>
 </div>
 
 {% if tables %}
@@ -22,7 +24,10 @@
                 <a href="{% url 'table:view_saved_table' table.slug %}" class="text-decoration-none text-reset">
                     <h5 class="mb-1">{{ table.title }}</h5>
                     <p class="mb-1 text-muted">
-                        <small>Создано: {{ table.created_at|date:"d.m.Y H:i" }}</small>
+                        <small>
+                            <span class="me-3">Создано: {{ table.created_at|date:"d.m.Y H:i" }}</span>
+                            <span><i class="fas fa-list-ol me-1"></i>Записей: {{ table.device_count }}</span>
+                        </small>
                     </p>
                 </a>
             </div>
