@@ -264,7 +264,7 @@ def import_devices(request):
 
 def imported_devices_list(request):
     device_list = ImportedDevice.objects.all().order_by('-created_at')
-    paginator = Paginator(device_list, 10)  # 10 элементов на странице
+    paginator = Paginator(device_list, 15)  # 15 элементов на странице
     page_number = request.GET.get('page')
     devices = paginator.get_page(page_number)
     
@@ -279,27 +279,34 @@ def imported_devices_list(request):
 @login_required
 def imported_device_detail(request, pk):
     device = get_object_or_404(ImportedDevice, pk=pk)
+    table_slug = request.GET.get('table_slug')
+
     return render(request, 'table/imported_device_detail.html', {
         'device': device,
+        'table_slug': table_slug,  # Передаем в шаблон
         'title': _("Просмотр устройства"),
     })
 
 @login_required
 def imported_device_edit(request, pk):
     device = get_object_or_404(ImportedDevice, pk=pk)
+    table_slug = request.GET.get('table_slug')
     
     if request.method == 'POST':
         form = ImportedDeviceEditForm(request.POST, instance=device)
         if form.is_valid():
             form.save()
             messages.success(request, _("Устройство успешно обновлено"))
-            return redirect('table:imported_device_detail', pk=device.pk)
+            if table_slug:
+                return redirect('table:view_saved_table', slug=table_slug)
+            return redirect('table:imported_devices_list')
     else:
         form = ImportedDeviceEditForm(instance=device)
     
     return render(request, 'table/imported_device_edit.html', {
         'form': form,
         'device': device,
+        'table_slug': table_slug,
         'title': _("Редактирование устройства"),
     })
 
@@ -307,8 +314,12 @@ def imported_device_edit(request, pk):
 @require_POST
 def imported_device_delete(request, pk):
     device = get_object_or_404(ImportedDevice, pk=pk)
+    table_slug = request.POST.get('table_slug')
     device.delete()
     messages.success(request, _("Устройство успешно удалено"))
+    
+    if table_slug:
+        return redirect('table:view_saved_table', slug=table_slug)
     return redirect('table:imported_devices_list')
 
 #Скачивание отредактированных данных из загруженной таблицы Excel
@@ -379,3 +390,32 @@ def list_saved_tables(request):
         'tables': tables,
         'title': 'Сохраненные таблицы'
     })
+
+
+@login_required
+def edit_saved_table(request, slug):
+    saved_table = get_object_or_404(SavedTable, slug=slug, creator=request.user)
+    
+    if request.method == 'POST':
+        new_title = request.POST.get('title')
+        if new_title:
+            saved_table.title = new_title
+            saved_table.save()
+            messages.success(request, 'Название таблицы обновлено')
+            return redirect('table:saved_tables_list')  # Убрал slug из redirect
+        else:
+            messages.error(request, 'Название не может быть пустым')
+    
+    return render(request, 'table/edit_saved_table.html', {
+        'saved_table': saved_table,
+        'title': f'Редактирование: {saved_table.title}'
+    })
+
+@login_required
+@require_POST
+def delete_saved_table(request, slug):
+    saved_table = get_object_or_404(SavedTable, slug=slug, creator=request.user)
+    title = saved_table.title
+    saved_table.delete()
+    messages.success(request, f'Таблица "{title}" успешно удалена')
+    return redirect('table:saved_tables_list')

@@ -1,90 +1,97 @@
 {% extends "table/base.html" %}
 
-{% block css %}
-<style>
-    /* Стили для sticky footer */
-    html, body {
-        height: 100%;
-    }
-    body {
-        display: flex;
-        flex-direction: column;
-        background-color: #f8f9fa; /* Добавлен фон для контраста */
-    }
-    .content-wrapper {
-        flex: 1 0 auto;
-        padding: 20px 0;
-    }
-    footer {
-        flex-shrink: 0;
-    }
-    /* Дополнительные стили для улучшения внешнего вида */
-    .card {
-        box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
-    }
-    dt {
-        font-weight: 600;
-    }
-</style>
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'table:device_list' %}">Устройства</a></li>
+<li class="breadcrumb-item active">{{ device.name }}</li>
 {% endblock %}
 
 {% block table_content %}
-<div class="content-wrapper">
-    <h2 style="color:rgb(255, 255, 255);">Устройство: {{ device.name }}</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-laptop me-2"></i>{{ device.name }}</h2>
+    <div class="btn-group">
+        <a href="{% url 'table:device_list' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Назад
+        </a>
+        <a href="{% url 'table:device_update' device.pk %}" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Редактировать
+        </a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+            <i class="fas fa-trash"></i> Удалить
+        </button>
+    </div>
+</div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Инвентарный номер:</dt>
-                <dd class="col-sm-9">{{ device.inventory_number }}</dd>
-
-                <dt class="col-sm-3">Категория:</dt>
-                        <dd class="col-sm-9">
-                            {% if device.category %}
-                                {{ device.category.name }}
-                            {% else %}
-                            <span class="text-muted">Не указана</span>
-                            {% endif %}
-                        </dd>
-
-                <dt class="col-sm-3">Статус:</dt>
-                <dd class="col-sm-9">{{ device.get_status_display }}</dd>
-
-                <dt class="col-sm-3">Местоположение:</dt>
-                <dd class="col-sm-9">{{ device.location|default:"-" }}</dd>
-
-                <dt class="col-sm-3">Описание:</dt>
-                <dd class="col-sm-9">{{ device.description|default:"-"|linebreaks }}</dd>
-
-                <dt class="col-sm-3">Дата создания:</dt>
-                <dd class="col-sm-9">{{ device.created_at }}</dd>
-
-                <dt class="col-sm-3">Последнее обновление:</dt>
-                <dd class="col-sm-9">{{ device.updated_at }}</dd>
-            </dl>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Основная информация</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Инвентарный номер:</dt>
+                    <dd class="col-sm-8">{{ device.inventory_number }}</dd>
+                    
+                    <dt class="col-sm-4">Категория:</dt>
+                    <dd class="col-sm-8">{{ device.category.name|default:"-" }}</dd>
+                    
+                    <dt class="col-sm-4">Статус:</dt>
+                    <dd class="col-sm-8"><span class="badge bg-{{ device.status_color }}">{{ device.get_status_display }}</span></dd>
+                </dl>
+            </div>
         </div>
     </div>
+    
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Дополнительная информация</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Местоположение:</dt>
+                    <dd class="col-sm-8">{{ device.location|default:"-" }}</dd>
+                    
+                    <dt class="col-sm-4">Дата создания:</dt>
+                    <dd class="col-sm-8">{{ device.created_at|date:"d.m.Y H:i" }}</dd>
+                    
+                    <dt class="col-sm-4">Последнее обновление:</dt>
+                    <dd class="col-sm-8">{{ device.updated_at|date:"d.m.Y H:i" }}</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <div class="d-flex justify-content-between mt-4">
-        <a href="{% url 'table:device_list' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Назад к списку
-        </a>
-        <div>
-            <a href="{% url 'table:device_update' device.pk %}" class="btn btn-warning">
-                <i class="fas fa-edit"></i> Редактировать
-            </a>
-            <a href="{% url 'table:device_delete' device.pk %}" class="btn btn-danger ml-2">
-                <i class="fas fa-trash-alt"></i> Удалить
-            </a>
+<div class="card">
+    <div class="card-header bg-white">
+        <h5 class="card-title mb-0">Описание</h5>
+    </div>
+    <div class="card-body">
+        {{ device.description|default:"Нет описания"|linebreaks }}
+    </div>
+</div>
+
+<!-- Модальное окно удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить устройство <strong>"{{ device.name }}"</strong>?</p>
+                <p class="text-danger">Это действие нельзя отменить!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <form method="post" action="{% url 'table:device_delete' device.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
-{% block footer %}
-<footer class="py-4 bg-dark mt-auto">
-    <div class="container">
-        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
-    </div>
-</footer>
-{% endblock footer %}

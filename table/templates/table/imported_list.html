@@ -1,45 +1,141 @@
 {% extends "table/base.html" %}
-{% load static %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'table:device_list' %}">Устройства</a></li>
+<li class="breadcrumb-item active">Импортированные устройства</li>
+{% endblock %}
 
 {% block table_content %}
-<div class="d-flex justify-content-between mb-3">
-    <h2>Импортированные устройства</h2>
-    <div>
-        <!-- Кнопка сохранения таблицы -->
-        <button type="button" class="btn btn-secondary me-2" data-bs-toggle="modal" data-bs-target="#saveTableModal">
-            <i class="bi bi-save"></i> Сохранить таблицу
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-white"><i class="fas fa-table me-2 text-white"></i>Импортированные устройства</h2>
+    <div class="btn-group">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveTableModal">
+            <i class="fas fa-save"></i> Сохранить
         </button>
-        
-        <!-- Кнопка скачивания Excel -->
-        <a href="{% url 'table:export_edited_devices' %}" class="btn btn-success me-2" title="Скачать в формате Excel">
-            <i class="bi bi-file-excel"></i> Скачать
+        <a href="{% url 'table:export_edited_devices' %}" class="btn btn-success">
+            <i class="fas fa-file-excel"></i> Экспорт
         </a>
-        
-        <!-- Кнопка нового импорта -->
-        <a href="{% url 'table:import_devices' %}" class="btn btn-primary" title="Импортировать новые устройства">
-            <i class="bi bi-plus-circle"></i> Новый импорт
+        <a href="{% url 'table:import_devices' %}" class="btn btn-info">
+            <i class="fas fa-plus"></i> Новый импорт
         </a>
     </div>
 </div>
 
-<!-- Блок для отображения сообщений -->
-{% if messages %}
-<div class="alert-container">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-</div>
-{% endif %}
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="table-light">
+                    <tr>
+                        <th>№ п/п</th>
+                        <th>Основное средство</th>
+                        <th>Инв. номер</th>
+                        <th>Дата принятия</th>
+                        <th>Стоимость</th>
+                        <th class="text-end">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for device in devices %}
+                    <tr>
+                        <td>{{ device.row_number }}</td>
+                        <td>{{ device.asset_name }}</td>
+                        <td>{{ device.inventory_number }}</td>
+                        <td>{{ device.acceptance_date|date:"d.m.Y" }}</td>
+                        <td>{{ device.book_value }} ₽</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'table:imported_device_detail' device.pk %}" class="btn btn-outline-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{% url 'table:imported_device_edit' device.pk %}" class="btn btn-outline-warning">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form method="post" action="{% url 'table:imported_device_delete' device.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Удалить это устройство?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">Нет импортированных устройств</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-<!-- Модальное окно для сохранения таблицы -->
-<div class="modal fade" id="saveTableModal" tabindex="-1" aria-labelledby="saveTableModalLabel" aria-hidden="true">
+            <!-- Пагинация для страницы с импортированной таблицей -->
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="text-muted">
+                    Показано с {{ devices.start_index }} по {{ devices.end_index }} из {{ devices.paginator.count }} записей
+                </div>
+                
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if devices.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1" aria-label="First">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ devices.previous_page_number }}" aria-label="Previous">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-angle-left"></i></span>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in devices.paginator.page_range %}
+                            {% if devices.number == num %}
+                                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                            {% elif num > devices.number|add:'-3' and num < devices.number|add:'3' %}
+                                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if devices.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ devices.next_page_number }}" aria-label="Next">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ devices.paginator.num_pages }}" aria-label="Last">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-angle-right"></i></span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно сохранения таблицы -->
+<div class="modal fade" id="saveTableModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="saveTableModalLabel">Сохранить текущую таблицу</h5>
+                <h5 class="modal-title">Сохранение текущей таблицы</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post" action="{% url 'table:save_table' %}">
@@ -49,127 +145,16 @@
                         <label for="tableTitle" class="form-label">Название таблицы</label>
                         <input type="text" class="form-control" id="tableTitle" name="table_title" 
                                value="Моя таблица от {% now 'd.m.Y' %}" required>
-                        <div class="form-text">Дайте понятное название, чтобы потом легко найти</div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save"></i> Сохранить
+                        <i class="fas fa-save"></i> Сохранить
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<!-- Основная таблица с устройствами -->
-<div class="table-responsive">
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th>№ п/п</th>
-                <th>Основное средство</th>
-                <th>Инвентарный номер</th>
-                <th>Дата принятия</th>
-                <th>Балансовая стоимость</th>
-                <th>Количество</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for device in devices %}
-            <tr>
-                <td>{{ device.row_number }}</td>
-                <td>{{ device.asset_name }}</td>
-                <td>{{ device.inventory_number }}</td>
-                <td>{{ device.acceptance_date|date:"d.m.Y" }}</td>
-                <td>{{ device.book_value }}</td>
-                <td>{{ device.quantity }}</td>
-                <td>
-                    <a href="{% url 'table:imported_device_detail' device.pk %}" class="btn btn-sm btn-info" title="Просмотр">
-                        <i class="bi bi-eye"></i>
-                    </a>
-                    <a href="{% url 'table:imported_device_edit' device.pk %}" class="btn btn-sm btn-warning" title="Редактировать">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-                    <form action="{% url 'table:imported_device_delete' device.pk %}" method="post" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-danger" title="Удалить" onclick="return confirm('Вы уверены?')">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" class="text-center">Нет импортированных данных</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<!-- Пагинация -->
-{% if devices.paginator.num_pages > 1 %}
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center mt-4">
-        {% if devices.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page=1" aria-label="First">
-                <span aria-hidden="true">&laquo;&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ devices.previous_page_number }}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        {% endif %}
-
-        {% for num in devices.paginator.page_range %}
-            {% if devices.number == num %}
-            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-            {% elif num > devices.number|add:'-3' and num < devices.number|add:'3' %}
-            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-            {% endif %}
-        {% endfor %}
-
-        {% if devices.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ devices.next_page_number }}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="?page={{ devices.paginator.num_pages }}" aria-label="Last">
-                <span aria-hidden="true">&raquo;&raquo;</span>
-            </a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
-{% endblock %}
-
-{% block scripts %}
-{{ block.super }}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Автоматическое скрытие сообщений через 5 секунд
-    setTimeout(function() {
-        let alerts = document.querySelectorAll('.alert');
-        alerts.forEach(alert => {
-            let bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        });
-    }, 5000);
-
-    // Инициализация tooltip для кнопок
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-});
-</script>
 {% endblock %}

@@ -1,26 +1,51 @@
 {% extends "table/base.html" %}
-{% load static %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'table:device_list' %}">Устройства</a></li>
+<li class="breadcrumb-item active">Сохраненные таблицы</li>
+{% endblock %}
 
 {% block table_content %}
-<div class="d-flex justify-content-between mb-3">
-    <h2>Мои сохраненные таблицы</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-save me-2"></i>Мои сохраненные таблицы</h2>
+    <a href="{% url 'table:imported_devices_list' %}" class="btn btn-outline-primary">
+        <i class="fas fa-arrow-left"></i> К текущей таблице
+    </a>
 </div>
 
+{% if tables %}
 <div class="list-group">
     {% for table in tables %}
-    <a href="{% url 'table:view_saved_table' table.slug %}" class="list-group-item list-group-item-action">
-        <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">{{ table.title }}</h5>
-            <small>{{ table.created_at|date:"d.m.Y H:i" }}</small>
+    <div class="list-group-item list-group-item-action">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+                <a href="{% url 'table:view_saved_table' table.slug %}" class="text-decoration-none text-reset">
+                    <h5 class="mb-1">{{ table.title }}</h5>
+                    <p class="mb-1 text-muted">
+                        <small>Создано: {{ table.created_at|date:"d.m.Y H:i" }}</small>
+                    </p>
+                </a>
+            </div>
+            <div class="btn-group">
+                <a href="{% url 'table:edit_saved_table' table.slug %}" class="btn btn-sm btn-outline-secondary" title="Переименовать">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+                <form method="post" action="{% url 'table:delete_saved_table' table.slug %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Удалить" 
+                            onclick="return confirm('Удалить таблицу \"{{ table.title }}\"?')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
         </div>
-        <p class="mb-1">Устройств: {{ table.devices.count }}</p>
-    </a>
-    {% empty %}
-    <div class="alert alert-info">
-        У вас нет сохраненных таблиц. Сохраните текущую таблицу, чтобы она появилась здесь.
     </div>
     {% endfor %}
 </div>
-
+{% else %}
+<div class="alert alert-info">
+    <h5><i class="fas fa-info-circle me-2"></i>Нет сохраненных таблиц</h5>
+    <p class="mb-0">Вы можете сохранить текущую таблицу устройств для последующего использования.</p>
+</div>
+{% endif %}
 {% endblock %}
-

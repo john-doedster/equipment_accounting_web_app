@@ -1,62 +1,83 @@
 {% extends "table/base.html" %}
-{% load static %}
 
-{% block css %}
-<link rel="stylesheet" href="{% static 'deps/css/my_footer_css.css' %}">
-{% endblock css %}
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'table:device_list' %}">Устройства</a></li>
+<li class="breadcrumb-item active">Импорт</li>
+{% endblock %}
 
-
-{% block content %}
-<div class="container mt-4">
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h4><i class="bi bi-upload"></i> Импорт устройств из Excel</h4>
-        </div>
-        <div class="card-body">
-            <form method="post" enctype="multipart/form-data" action="{% url 'table:import_devices' %}" id="importForm">
+{% block table_content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="card-title mb-0">
+                    <i class="fas fa-file-import me-2"></i>Импорт устройств из Excel
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-4">
+                    <h5><i class="fas fa-info-circle me-2"></i>Инструкция по импорту</h5>
+                    <ol class="mb-0">
+                        <li>Подготовьте файл в формате XLSX или XLS</li>
+                        <li>Убедитесь, что структура файла соответствует требованиям</li>
+                        <li>Выберите файл и нажмите "Импортировать"</li>
+                    </ol>
+                </div>
                 
-                {% csrf_token %}
-                
+                <form method="post" enctype="multipart/form-data" class="dropzone" id="importForm">
+                    {% csrf_token %}
+                    
                     {% if messages %}
-                    <div class="alert alert-danger">
+                    <div class="mb-4">
                         {% for message in messages %}
-                        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                         {% endfor %}
                     </div>
                     {% endif %}
-
-
-                <div class="mb-3">
-                    <label for="fileInput" class="form-label">
-                        <span id="fileLabel">Выберите файл Excel</span>
-                        <div id="fileName" class="text-muted small mt-1" style="display: none;"></div>
-                    </label>
-                    <input type="file" class="form-control" id="fileInput" name="file" 
-                           accept=".xlsx,.xls" required style="display: none;">
-                    <button type="button" class="btn btn-outline-secondary" id="fileButton">
-                        <i class="bi bi-folder2-open"></i> Выбрать файл
-                    </button>
-                </div>
-                
-                <button type="submit" class="btn btn-success" id="submitButton" disabled>
-                    <i class="bi bi-upload"></i> Импортировать
-                </button>
-            </form>
+                    
+                    <div class="mb-4">
+                        <label for="fileInput" class="form-label">Файл Excel</label>
+                        <input type="file" class="form-control" id="fileInput" name="file" accept=".xlsx,.xls" required>
+                        <div class="form-text">Поддерживаются файлы .xlsx и .xls</div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'table:device_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                        <button type="submit" class="btn btn-success" id="submitBtn">
+                            <i class="fas fa-file-import"></i> Импортировать
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
-{% block footer %}
-<footer class="py-4 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
-    </div>
-</footer>
-{% endblock footer %}
-
-{% block scripts %}
-<script src="{% static 'js/button_input_handler.js' %}"></script>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('fileInput');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            submitBtn.disabled = false;
+        } else {
+            submitBtn.disabled = true;
+        }
+    });
+    
+    // Показываем имя выбранного файла
+    fileInput.addEventListener('change', function() {
+        const fileName = this.files[0]?.name || 'Файл не выбран';
+        document.getElementById('fileLabel').textContent = fileName;
+    });
+});
+</script>
 {% endblock %}
-

@@ -1,0 +1,22 @@
+{% extends "table/base.html" %}
+
+{% block table_content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Редактирование таблицы: {{ saved_table.title }}</h2>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Название таблицы</label>
+                <input type="text" class="form-control" id="title" name="title" value="{{ saved_table.title }}" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <!-- Изменяем ссылку "Отмена" чтобы вела к списку таблиц -->
+            <a href="{% url 'table:saved_tables_list' %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
