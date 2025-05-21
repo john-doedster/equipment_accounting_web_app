@@ -39,7 +39,13 @@
                 <dd class="col-sm-9">{{ device.inventory_number }}</dd>
 
                 <dt class="col-sm-3">Категория:</dt>
-                <dd class="col-sm-9">{{ device.category.name|default:"-" }}</dd>
+                        <dd class="col-sm-9">
+                            {% if device.category %}
+                                {{ device.category.name }}
+                            {% else %}
+                            <span class="text-muted">Не указана</span>
+                            {% endif %}
+                        </dd>
 
                 <dt class="col-sm-3">Статус:</dt>
                 <dd class="col-sm-9">{{ device.get_status_display }}</dd>

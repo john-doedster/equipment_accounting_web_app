@@ -74,8 +74,6 @@ class DeviceForm(forms.ModelForm):
             )
         return inventory_number
 
-    # forms.py
-
 
 class ExportForm(forms.Form):
     COLUMN_CHOICES = [
