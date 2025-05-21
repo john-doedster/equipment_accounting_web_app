@@ -14,6 +14,7 @@
         </div>
         <div class="card-body">
             <form method="post" enctype="multipart/form-data" action="{% url 'table:import_devices' %}" id="importForm">
+                
                 {% csrf_token %}
                 
                     {% if messages %}
