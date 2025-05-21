@@ -7,10 +7,16 @@
 {% block table_content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h2><i class="fas fa-laptop me-2"></i>Список устройств</h2>
-        <p class="text-muted mb-0">Всего устройств: {{ devices.count }}</p>
+            <h2 class="text-white mb-0">  <!-- Белый текст -->
+                <i class="fas fa-laptop me-2 text-white"></i>Список устройств  <!-- Белая иконка -->
+            </h2>
+        <p class="text-white mb-0">Всего устройств: {{ devices.count }}</p>
     </div>
+
     <div class="btn-group">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveTableModal">
+            <i class="fas fa-save"></i> Сохранить
+        </button>
         <a href="{% url 'table:device_create' %}" class="btn btn-primary">
             <i class="fas fa-plus"></i> Добавить
         </a>
@@ -20,9 +26,16 @@
         <a href="{% url 'table:import_devices' %}" class="btn btn-info">
             <i class="fas fa-upload"></i> Импорт
         </a>
+
+        <div class="ms-3 d-inline-block">  <!-- Отступ слева -->
+            <a href="{% url 'table:imported_devices_list' %}" class="btn btn-warning">
+                <i class="fas fa-arrow-left me-1"></i> Вернуться к работе
+            </a>
+        </div>
     </div>
 </div>
 
+<!-- Остальной код остается без изменений -->
 <div class="card mb-4">
     <div class="card-header bg-white">
         <form method="get" class="row g-2">
@@ -133,4 +146,5 @@
         {% endif %}
     </div>
 </div>
+
 {% endblock %}

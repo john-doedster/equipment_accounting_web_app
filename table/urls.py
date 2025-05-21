@@ -29,4 +29,5 @@ urlpatterns = [
     path('saved-table/<slug:slug>/edit/', views.edit_saved_table, name='edit_saved_table'),
 
     path('saved-table/<slug:slug>/delete/', views.delete_saved_table, name='delete_saved_table'),
+
 ]

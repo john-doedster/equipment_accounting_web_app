@@ -12,12 +12,18 @@
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveTableModal">
             <i class="fas fa-save"></i> Сохранить
         </button>
+
         <a href="{% url 'table:export_edited_devices' %}" class="btn btn-success">
             <i class="fas fa-file-excel"></i> Экспорт
         </a>
         <a href="{% url 'table:import_devices' %}" class="btn btn-info">
             <i class="fas fa-plus"></i> Новый импорт
         </a>
+
+        <a href="{% url 'table:device_list' %}" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Закончить работу
+        </a>
+
     </div>
 </div>
 
@@ -45,6 +51,7 @@
                         <td>{{ device.book_value }} ₽</td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">
+                
                                 <a href="{% url 'table:imported_device_detail' device.pk %}" class="btn btn-outline-primary">
                                     <i class="fas fa-eye"></i>
                                 </a>
