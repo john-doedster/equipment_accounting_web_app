@@ -32,6 +32,10 @@
                 </a>
             </div>
             <div class="btn-group">
+
+                <a href="{% url 'table:export_saved_table' table.slug %}" class="btn btn-sm btn-outline-success" title="Скачать Excel">
+                    <i class="fas fa-file-excel"></i>
+                </a>
                 <a href="{% url 'table:edit_saved_table' table.slug %}" class="btn btn-sm btn-outline-secondary" title="Переименовать">
                     <i class="fas fa-pencil-alt"></i>
                 </a>

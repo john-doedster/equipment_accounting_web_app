@@ -427,3 +427,33 @@ def delete_saved_table(request, slug):
     saved_table.delete()
     messages.success(request, f'Таблица "{title}" успешно удалена')
     return redirect('table:saved_tables_list')
+
+def export_saved_table(request, slug):
+    try:
+        saved_table = get_object_or_404(SavedTable, slug=slug)
+        
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Устройства"
+        
+        headers = ['№', 'Основное средство', 'Инвентарный номер', 
+                  'Дата принятия', 'Балансовая стоимость', 'Количество']
+        ws.append(headers)
+        
+        for idx, device in enumerate(saved_table.devices.all(), start=1):
+            ws.append([
+                idx,
+                getattr(device, 'asset_name', ''),
+                getattr(device, 'inventory_number', ''),
+                device.acceptance_date.strftime('%d.%m.%Y') if getattr(device, 'acceptance_date', None) else '',
+                getattr(device, 'book_value', ''),
+                getattr(device, 'quantity', '')
+            ])
+        
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = f'attachment; filename="{saved_table.title}.xlsx"'
+        wb.save(response)
+        return response
+        
+    except Exception as e:
+        return HttpResponse(f"Произошла ошибка: {str(e)}", status=500)
