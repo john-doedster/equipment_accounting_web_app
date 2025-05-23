@@ -3,6 +3,33 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'deps/css/product_detail.css' %}">
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .content-wrapper {
+        flex: 1 0 auto;
+        padding-bottom: 60px;
+    }
+    
+    footer {
+        flex-shrink: 0;
+        background-color: #343a40;
+        color: white;
+        padding: 20px 0;
+        margin-top: auto;
+    }
+</style>
+
 {% endblock css %}
 
 {% block modal_cart %} 
@@ -56,3 +83,11 @@
 </div>
 
 {% endblock %}
+
+{% block footer %}
+<footer class="py-4 bg-dark">
+    <div class="container">
+        <p class="m-0 text-center text-white">Сибирский государственный университет телекоммуникаций и информатики 2025 г.</p>
+    </div>
+</footer>
+{% endblock footer %}
