@@ -212,7 +212,7 @@ def import_devices(request):
             for index, row in df.iterrows():
                 try:
                     # Обработка и валидация данных
-                    acceptance_date = (datetime.strptime(row['Дата принятия к учету'], '%Y-%m-%d').date() 
+                    acceptance_date = (datetime.strptime(row['Дата принятия к учету'], '%d.%m.%Y').date() 
                                       if isinstance(row['Дата принятия к учету'], str) 
                                       else row['Дата принятия к учету'] or datetime.now().date())
                     
@@ -436,8 +436,8 @@ def export_saved_table(request, slug):
         ws = wb.active
         ws.title = "Устройства"
         
-        headers = ['№', 'Основное средство', 'Инвентарный номер', 
-                  'Дата принятия', 'Балансовая стоимость', 'Количество']
+        headers = ['№ п/п', 'Основное средство', 'Инвентарный номер', 
+                  'Дата принятия к учету', 'Балансовая стоимость', 'Количество']
         ws.append(headers)
         
         for idx, device in enumerate(saved_table.devices.all(), start=1):
