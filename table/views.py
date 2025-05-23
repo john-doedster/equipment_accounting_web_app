@@ -457,3 +457,21 @@ def export_saved_table(request, slug):
         
     except Exception as e:
         return HttpResponse(f"Произошла ошибка: {str(e)}", status=500)
+
+
+def delete_all_imported_devices(request):
+    if request.method == 'POST':
+        # Получаем количество удаляемых устройств (для сообщения)
+        count = ImportedDevice.objects.count()
+        
+        # Удаляем все устройства
+        ImportedDevice.objects.all().delete()
+        
+        # Добавляем сообщение об успешном удалении
+        messages.success(request, f'Успешно удалено {count} устройств.')
+        
+        # Перенаправляем на страницу с импортированными устройствами
+        return redirect('table:import_devices')  # Замените на ваш URL name
+    
+    # Если запрос не POST, перенаправляем на главную
+    return redirect('table:device_list')  # Замените на ваш основной URL

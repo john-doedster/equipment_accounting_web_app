@@ -27,8 +27,8 @@ urlpatterns = [
     path('saved-table/<slug:slug>/', views.view_saved_table, name='view_saved_table'),
 
     path('saved-table/<slug:slug>/edit/', views.edit_saved_table, name='edit_saved_table'),
-
     path('saved-table/<slug:slug>/delete/', views.delete_saved_table, name='delete_saved_table'),
 
     path('saved-tables/<slug:slug>/export/', views.export_saved_table, name='export_saved_table'),
+    path('imported_devices/delete_all/', views.delete_all_imported_devices, name='delete_all_imported_devices'),
 ]
