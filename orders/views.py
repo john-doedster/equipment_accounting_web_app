@@ -1,16 +1,11 @@
-from pyexpat.errors import messages
 from django.db import transaction
+from django.contrib import messages  # Правильный импорт для сообщений
 from django.forms import ValidationError
 from django.shortcuts import redirect, render
 
 from carts.models import Cart
 from orders.forms import CreateOrderForm
 from orders.models import Order, OrderItem
-
-def create_order(request):
-    return render(request, 'orders/create_order.html')
-
-
 
 def create_order(request):
     if request.method == 'POST':
@@ -32,15 +27,16 @@ def create_order(request):
                         )
                         # Создать заказанные товары
                         for cart_item in cart_items:
-                            product=cart_item.product
-                            name=cart_item.product.name
-                            price=cart_item.product.sell_price()
-                            quantity=cart_item.quantity
-
+                            product = cart_item.product
+                            name = cart_item.product.name
+                            price = cart_item.product.sell_price()
+                            quantity = cart_item.quantity
 
                             if product.quantity < quantity:
-                                raise ValidationError(f'Недостаточное количество товара {name} на складе\
-                                                       В наличии - {product.quantity}')
+                                raise ValidationError(
+                                    f'Недостаточное количество товара {name} на складе. '
+                                    f'В наличии - {product.quantity}'
+                                )
 
                             OrderItem.objects.create(
                                 order=order,
@@ -55,17 +51,16 @@ def create_order(request):
                         # Очистить корзину пользователя после создания заказа
                         cart_items.delete()
 
-                        messages.success(request, 'Заказ оформлен!')
+                        messages.success(request, 'Заказ оформлен!')  # Теперь это будет работать
                         return redirect('user:profile')
             except ValidationError as e:
-                messages.success(request, str(e))
+                messages.error(request, str(e))  # Лучше использовать error для сообщений об ошибках
                 return redirect('orders:create_order')
     else:
         initial = {
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
-            }
-
+        }
         form = CreateOrderForm(initial=initial)
 
     context = {

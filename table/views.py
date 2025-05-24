@@ -6,6 +6,7 @@ import uuid
 from django.core.paginator import Paginator
 from django.core.serializers import serialize
 from django.db import transaction
+from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.template.defaultfilters import slugify
 from django.views.generic import (
@@ -385,10 +386,6 @@ def view_saved_table(request, slug):
         'devices': devices,
         'title': saved_table.title
     })
-
-from django.db.models import Count
-
-from django.db.models import Count
 
 def list_saved_tables(request):
     tables = SavedTable.objects.filter(creator=request.user)\
