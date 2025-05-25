@@ -8,28 +8,28 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="text-white mb-0">
-            <i class="fas fa-laptop me-2 text-white"></i>Список устройств
+            <i class="fas fa-laptop me-2 text-white"></i>Составление отчёта по оборудованию
         </h2>
         <p class="text-white mb-0">Всего устройств: {{ devices.count }}</p>
     </div>
 
-    <div class="btn-group">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#saveTableModal">
+    <div class="btn-group gap-4">
+        {% comment %} <button class="btn btn-primary rounded-3" data-bs-toggle="modal" data-bs-target="#saveTableModal">
             <i class="fas fa-save"></i> Сохранить
-        </button>
-        <a href="{% url 'table:device_create' %}" class="btn btn-primary">
+        </button> {% endcomment %}
+        <a href="{% url 'table:device_create' %}" class="btn btn-primary rounded-3">
             <i class="fas fa-plus"></i> Добавить
         </a>
-        <a href="{% url 'table:device_export' %}" class="btn btn-success">
+        <a href="{% url 'table:device_export' %}" class="btn btn-success rounded-3">
             <i class="fas fa-file-excel"></i> Экспорт
         </a>
-        <a href="{% url 'table:import_devices' %}" class="btn btn-info">
+        <a href="{% url 'table:import_devices' %}" class="btn btn-info rounded-3">
             <i class="fas fa-upload"></i> Импорт
         </a>
 
         <div class="ms-3 d-inline-block">
-            <a href="{% url 'table:imported_devices_list' %}" class="btn btn-warning">
-                <i class="fas fa-arrow-left me-1"></i> Вернуться к работе
+            <a href="{% url 'table:imported_devices_list' %}" class="btn btn-warning rounded-3">
+                <i class="fas fa-arrow-left me-1"></i> Работа с импортированным отчётом
             </a>
         </div>
     </div>
@@ -64,7 +64,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive" style="overflow-x: auto; width: 100%;">
-            <table class="table table-hover" style="min-width: 1200px;">
+            <table class="table table-hover" style="min-width: 1150px;">
                 <thead class="table-light">
                     <tr>
                         <th style="width: 5%;">№ п/п</th>

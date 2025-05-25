@@ -51,7 +51,7 @@
 
                         {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'table:device_list' %}">Учёт оборудования</a>
+                            <a class="nav-link text-white" href="{% url 'table:device_list' %}">Учёт</a>
                         </li>
 
                         {% comment %} <li class="nav-item">
@@ -59,7 +59,7 @@
                         </li> {% endcomment %}
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'table:saved_tables_list' %}">
-                                <i class="bi bi-collection"></i> Мои таблицы
+                                <i class="bi bi-collection"></i> Таблицы
                             </a>
                         </li>
                         
