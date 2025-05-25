@@ -1,3 +1,4 @@
+from datetime import datetime
 from django import forms
 from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
@@ -5,13 +6,30 @@ from .models import Device, Category, ImportedDevice
 
 
 class DeviceForm(forms.ModelForm):
-
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all().order_by("name"),
-        label=_("Категория"),
-        required=False,  # Если категория не обязательна
-        empty_label="Выберите категорию",  # Заменяем прочерк на это текст
-        widget=forms.Select(attrs={"class": "form-select"}),
+    acceptance_date = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        input_formats=['%Y-%m-%d', '%d.%m.%Y'],
+        required=False
+    )
+    
+    book_value = forms.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        widget=forms.NumberInput(attrs={
+            'step': '0.01',
+            'class': 'form-control',
+            'min': '0'
+        }),
+        required=False
+    )
+    
+    quantity = forms.IntegerField(
+        widget=forms.NumberInput(attrs={
+            'min': '1',
+            'class': 'form-control'
+        }),
+        initial=1,
+        required=False
     )
 
     class Meta:
@@ -22,49 +40,43 @@ class DeviceForm(forms.ModelForm):
             "inventory_number",
             "status",
             "location",
+            "acceptance_date",
+            "book_value",
+            "quantity",
             "description",
         ]
-        labels = {
-            "name": _("Название устройства"),
-            "category": _("Категория"),
-            "inventory_number": _("Инвентарный номер"),
-            "status": _("Статус"),
-            "location": _("Местоположение"),
-            "description": _("Описание"),
-        }
         widgets = {
-            "description": forms.Textarea(
-                attrs={
-                    "rows": 3,
-                    "class": "form-control",
-                    "placeholder": _("Подробное описание устройства"),
-                }
-            ),
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+            "inventory_number": forms.TextInput(attrs={"class": "form-control"}),
             "status": forms.Select(attrs={"class": "form-select"}),
-            "category": forms.Select(attrs={"class": "form-select"}),
-        }
-        help_texts = {
-            "inventory_number": _("Уникальный идентификатор устройства"),
+            "location": forms.Select(attrs={"class": "form-select"}),
+            "description": forms.Textarea(attrs={
+                "rows": 3,
+                "class": "form-control",
+                "placeholder": _("Подробное описание устройства"),
+            }),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.fields["category"].empty_label = "Выберите категорию"
         self.fields["category"].queryset = Category.objects.all().order_by("name")
+        self.fields["category"].empty_label = "Выберите категорию"
         self.fields["category"].widget.attrs.update({"class": "form-select"})
 
-        # Добавляем классы form-control для всех полей
-        for field_name, field in self.fields.items():
-            if field_name not in ["status", "category"]:
-                field.widget.attrs["class"] = "form-control"
-
-        # Оптимизируем queryset для категорий
-        self.fields["category"].queryset = Category.objects.all().order_by("name")
+    def clean_acceptance_date(self):
+        date = self.cleaned_data.get('acceptance_date')
+        if isinstance(date, str):
+            try:
+                return datetime.strptime(date, '%d.%m.%Y').date()
+            except ValueError:
+                try:
+                    return datetime.strptime(date, '%Y-%m-%d').date()
+                except ValueError:
+                    raise forms.ValidationError("Введите дату в формате ДД.ММ.ГГГГ")
+        return date
 
     def clean_inventory_number(self):
         inventory_number = self.cleaned_data["inventory_number"]
-        # Проверка на уникальность (исключая текущий объект при редактировании)
         qs = Device.objects.filter(inventory_number=inventory_number)
         if self.instance and self.instance.pk:
             qs = qs.exclude(pk=self.instance.pk)
@@ -73,7 +85,6 @@ class DeviceForm(forms.ModelForm):
                 _("Устройство с таким инвентарным номером уже существует")
             )
         return inventory_number
-
 
 class ExportForm(forms.Form):
     COLUMN_CHOICES = [

@@ -70,12 +70,6 @@ class DeviceCreateView(SuccessMessageMixin, CreateView):
         response = super().form_valid(form)
         messages.success(self.request, self.success_message)
         return response
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = _("Добавление устройства")
-        return context    
-
 
 class DeviceUpdateView(SuccessMessageMixin, UpdateView):
     model = Device
@@ -84,16 +78,16 @@ class DeviceUpdateView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("table:device_list")
     success_message = _("Устройство успешно обновлено")
 
+    def get_initial(self):
+        initial = super().get_initial()
+        if self.object.acceptance_date:
+            initial['acceptance_date'] = self.object.acceptance_date.strftime('%Y-%m-%d')
+        return initial
 
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, self.success_message)
         return response
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = _("Редактирование устройства")
-        return context
 
 
 class DeviceDeleteView(DeleteView):
