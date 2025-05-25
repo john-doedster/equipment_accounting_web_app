@@ -6,15 +6,32 @@
 {% endblock %}
 
 {% block table_content %}
-<div class="card">
-    <div class="card-header bg-white">
-        <h2 class="card-title mb-0">
-            <i class="fas fa-edit me-2"></i>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="text-white mb-0">
+            <i class="fas fa-edit me-2 text-white"></i>
             {% if object %}Редактирование устройства{% else %}Добавление нового устройства{% endif %}
         </h2>
     </div>
+    <div class="btn-group">
+        <a href="{% if object %}{% url 'table:device_detail' object.pk %}{% else %}{% url 'table:device_list' %}{% endif %}" 
+           class="btn btn-secondary">
+            <i class="fas fa-times"></i> Отмена
+        </a>
+        <button type="submit" form="deviceForm" class="btn btn-success">
+            <i class="fas fa-save"></i> Сохранить
+        </button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-white">
+        <h5 class="card-title mb-0">
+            {% if object %}Редактирование данных устройства{% else %}Введите данные нового устройства{% endif %}
+        </h5>
+    </div>
     <div class="card-body">
-        <form method="post" novalidate>
+        <form method="post" novalidate id="deviceForm">
             {% csrf_token %}
             
             {% if form.non_field_errors %}
@@ -26,33 +43,105 @@
             {% endif %}
             
             <div class="row g-3">
-                {% for field in form %}
+                <!-- Название устройства -->
                 <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}" class="form-label">
-                            {{ field.label }}
-                            {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
-                        </label>
-                        {{ field }}
-                        {% if field.help_text %}
-                        <small class="form-text text-muted">{{ field.help_text }}</small>
-                        {% endif %}
-                        {% for error in field.errors %}
-                        <div class="invalid-feedback d-block">{{ error }}</div>
-                        {% endfor %}
+                    <div class="form-group mb-3">
+                        <label for="id_name" class="form-label">Название устройства</label>
+                        <input type="text" name="name" class="form-control" id="id_name" 
+                               value="{{ form.name.value|default:'' }}" required>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
-            
-            <div class="d-flex justify-content-between mt-4">
-                <a href="{% if object %}{% url 'table:device_detail' object.pk %}{% else %}{% url 'table:device_list' %}{% endif %}" 
-                   class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Отмена
-                </a>
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save"></i> Сохранить
-                </button>
+                
+                <!-- Категория (выпадающий список) -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_category" class="form-label">Категория</label>
+                        <select name="category" class="form-select" id="id_category">
+                            <option value="">Выберите категорию</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}" 
+                                    {% if form.category.value == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Инвентарный номер -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_inventory_number" class="form-label">Инвентарный номер</label>
+                        <input type="text" name="inventory_number" class="form-control" 
+                               id="id_inventory_number" value="{{ form.inventory_number.value|default:'' }}" required>
+                    </div>
+                </div>
+                
+                <!-- Расположение (выпадающий список с кабинетами) -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_location" class="form-label">Расположение</label>
+                        <select name="location" class="form-select" id="id_location">
+                            <option value="">Выберите расположение</option>
+                            <option value="office_101" {% if form.location.value == 'office_101' %}selected{% endif %}>Кабинет 101</option>
+                            <option value="office_102" {% if form.location.value == 'office_102' %}selected{% endif %}>Кабинет 102</option>
+                            <option value="office_201" {% if form.location.value == 'office_201' %}selected{% endif %}>Кабинет 201</option>
+                            <option value="office_202" {% if form.location.value == 'office_202' %}selected{% endif %}>Кабинет 202</option>
+                            <option value="server_room" {% if form.location.value == 'server_room' %}selected{% endif %}>Серверная</option>
+                            <option value="warehouse" {% if form.location.value == 'warehouse' %}selected{% endif %}>Склад</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Дата принятия к учету -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_acceptance_date" class="form-label">Дата принятия к учету</label>
+                        <input type="date" name="acceptance_date" class="form-control" 
+                               id="id_acceptance_date" value="{{ form.acceptance_date.value|date:'Y-m-d'|default:'' }}">
+                    </div>
+                </div>
+                
+                <!-- Балансовая стоимость -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_book_value" class="form-label">Балансовая стоимость</label>
+                        <input type="number" step="0.01" name="book_value" class="form-control" 
+                               id="id_book_value" value="{{ form.book_value.value|default:'' }}">
+                    </div>
+                </div>
+                
+                <!-- Количество -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_quantity" class="form-label">Количество</label>
+                        <input type="number" name="quantity" min="1" class="form-control" 
+                               id="id_quantity" value="{{ form.quantity.value|default:'1' }}">
+                    </div>
+                </div>
+                
+                <!-- Статус -->
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="id_status" class="form-label">Статус</label>
+                        <select name="status" class="form-select" id="id_status">
+                            {% for value, name in form.fields.status.choices %}
+                            <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>
+                                {{ name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Описание -->
+                <div class="col-12">
+                    <div class="form-group mb-3">
+                        <label for="id_description" class="form-label">Описание</label>
+                        <textarea name="description" class="form-control" id="id_description" 
+                                  rows="3">{{ form.description.value|default:'' }}</textarea>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -68,6 +157,28 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('{{ field.id_for_label }}').classList.add('is-invalid');
         {% endif %}
     {% endfor %}
+    
+    // Добавляем обработчик для динамического добавления is-invalid при изменении
+    const form = document.getElementById('deviceForm');
+    if (form) {
+        form.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('change', function() {
+                if (this.classList.contains('is-invalid')) {
+                    this.classList.remove('is-invalid');
+                }
+            });
+        });
+    }
+    
+    // Инициализация datepicker для поля даты (если используется)
+    if (document.getElementById('id_acceptance_date')) {
+        $('#id_acceptance_date').datepicker({
+            format: 'dd.mm.yyyy',
+            language: 'ru',
+            autoclose: true,
+            todayHighlight: true
+        });
+    }
 });
 </script>
 {% endblock %}

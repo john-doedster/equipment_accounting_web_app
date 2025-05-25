@@ -7,9 +7,9 @@
 {% block table_content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-            <h2 class="text-white mb-0">  <!-- Белый текст -->
-                <i class="fas fa-laptop me-2 text-white"></i>Список устройств  <!-- Белая иконка -->
-            </h2>
+        <h2 class="text-white mb-0">
+            <i class="fas fa-laptop me-2 text-white"></i>Список устройств
+        </h2>
         <p class="text-white mb-0">Всего устройств: {{ devices.count }}</p>
     </div>
 
@@ -27,7 +27,7 @@
             <i class="fas fa-upload"></i> Импорт
         </a>
 
-        <div class="ms-3 d-inline-block">  <!-- Отступ слева -->
+        <div class="ms-3 d-inline-block">
             <a href="{% url 'table:imported_devices_list' %}" class="btn btn-warning">
                 <i class="fas fa-arrow-left me-1"></i> Вернуться к работе
             </a>
@@ -35,7 +35,6 @@
     </div>
 </div>
 
-<!-- Остальной код остается без изменений -->
 <div class="card mb-4">
     <div class="card-header bg-white">
         <form method="get" class="row g-2">
@@ -64,23 +63,33 @@
         </form>
     </div>
     <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-hover">
+        <div class="table-responsive" style="overflow-x: auto; width: 100%;">
+            <table class="table table-hover" style="min-width: 1200px;">
                 <thead class="table-light">
                     <tr>
-                        <th>Название</th>
-                        <th>Инв. номер</th>
-                        <th>Категория</th>
-                        <th>Статус</th>
-                        <th class="text-end">Действия</th>
+                        <th style="width: 5%;">№ п/п</th>
+                        <th style="width: 15%;">Название</th>
+                        <th style="width: 10%;">Категория</th>
+                        <th style="width: 10%;">Инвентарный номер</th>
+                        <th style="width: 10%;">Расположение</th>
+                        <th style="width: 10%;">Дата принятия к учету</th>
+                        <th style="width: 10%;">Балансовая стоимость</th>
+                        <th style="width: 5%;">Количество</th>
+                        <th style="width: 10%;">Статус</th>
+                        <th style="width: 15%;" class="text-end">Действия</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for device in devices %}
                     <tr>
-                        <td>{{ device.name }}</td>
-                        <td>{{ device.inventory_number }}</td>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ device.name|default:"-" }}</td>
                         <td>{{ device.category.name|default:"-" }}</td>
+                        <td>{{ device.inventory_number|default:"-" }}</td>
+                        <td>{{ device.get_location_display|default:"-" }}</td>
+                        <td>{{ device.acceptance_date|date:"d.m.Y"|default:"-" }}</td>
+                        <td>{{ device.book_value|default:"-" }}</td>
+                        <td>{{ device.quantity|default:"1" }}</td>
                         <td><span class="badge bg-{{ device.status_color }}">{{ device.get_status_display }}</span></td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">
@@ -98,13 +107,14 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="5" class="text-center py-4">Устройства не найдены</td>
+                        <td colspan="10" class="text-center py-4">Устройства не найдены</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
         
+        <!-- Пагинатор (я его не убирал, просто перенес в конец таблицы) -->
         {% if is_paginated %}
         <nav aria-label="Навигация">
             <ul class="pagination justify-content-center mt-4">
@@ -146,5 +156,4 @@
         {% endif %}
     </div>
 </div>
-
 {% endblock %}

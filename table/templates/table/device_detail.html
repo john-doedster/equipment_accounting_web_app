@@ -2,14 +2,20 @@
 
 {% block breadcrumb_items %}
 <li class="breadcrumb-item"><a href="{% url 'table:device_list' %}">Устройства</a></li>
-<li class="breadcrumb-item active">{{ device.name }}</li>
+<li class="breadcrumb-item active">{{ device.inventory_number|default:device.id }}</li>
 {% endblock %}
 
 {% block table_content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2><i class="fas fa-laptop me-2"></i>{{ device.name }}</h2>
+    <div>
+        <h2 class="text-white mb-0">
+            <i class="fas fa-laptop me-2 text-white"></i>
+            Устройство #{{ device.inventory_number|default:device.id }}
+        </h2>
+        <p class="text-white mb-0">Статус: <span class="badge bg-{{ device.status_color }}">{{ device.get_status_display }}</span></p>
+    </div>
     <div class="btn-group">
-        <a href="{% url 'table:device_list' %}" class="btn" style="background-color: #6c757d; border-color: #6c757d; color: white;">
+        <a href="{% url 'table:device_list' %}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Назад
         </a>
         <a href="{% url 'table:device_update' device.pk %}" class="btn btn-warning">
@@ -25,18 +31,21 @@
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header bg-white">
-                <h5 class="card-title mb-0">Основная информация</h5>
+                <h5 class="card-title mb-0">Основные характеристики</h5>
             </div>
             <div class="card-body">
                 <dl class="row mb-0">
                     <dt class="col-sm-4">Инвентарный номер:</dt>
-                    <dd class="col-sm-8">{{ device.inventory_number }}</dd>
+                    <dd class="col-sm-8">{{ device.inventory_number|default:"-" }}</dd>
                     
                     <dt class="col-sm-4">Категория:</dt>
                     <dd class="col-sm-8">{{ device.category.name|default:"-" }}</dd>
                     
-                    <dt class="col-sm-4">Статус:</dt>
-                    <dd class="col-sm-8"><span class="badge bg-{{ device.status_color }}">{{ device.get_status_display }}</span></dd>
+                    <dt class="col-sm-4">Расположение:</dt>
+                    <dd class="col-sm-8">{{ device.get_location_display|default:"-" }}</dd>
+                    
+                    <dt class="col-sm-4">Балансовая стоимость:</dt>
+                    <dd class="col-sm-8">{{ device.book_value|default:"-" }}</dd>
                 </dl>
             </div>
         </div>
@@ -45,12 +54,15 @@
     <div class="col-md-6">
         <div class="card mb-4">
             <div class="card-header bg-white">
-                <h5 class="card-title mb-0">Дополнительная информация</h5>
+                <h5 class="card-title mb-0">Учетные данные</h5>
             </div>
             <div class="card-body">
                 <dl class="row mb-0">
-                    <dt class="col-sm-4">Местоположение:</dt>
-                    <dd class="col-sm-8">{{ device.location|default:"-" }}</dd>
+                    <dt class="col-sm-4">Дата принятия к учету:</dt>
+                    <dd class="col-sm-8">{{ device.acceptance_date|date:"d.m.Y"|default:"-" }}</dd>
+                    
+                    <dt class="col-sm-4">Количество:</dt>
+                    <dd class="col-sm-8">{{ device.quantity|default:"1" }}</dd>
                     
                     <dt class="col-sm-4">Дата создания:</dt>
                     <dd class="col-sm-8">{{ device.created_at|date:"d.m.Y H:i" }}</dd>
@@ -63,14 +75,16 @@
     </div>
 </div>
 
-<div class="card">
+{% if device.description %}
+<div class="card mb-4">
     <div class="card-header bg-white">
         <h5 class="card-title mb-0">Описание</h5>
     </div>
     <div class="card-body">
-        {{ device.description|default:"Нет описания"|linebreaks }}
+        {{ device.description|linebreaks }}
     </div>
 </div>
+{% endif %}
 
 <!-- Модальное окно удаления -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
@@ -81,7 +95,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Вы уверены, что хотите удалить устройство <strong>"{{ device.name }}"</strong>?</p>
+                <p>Вы уверены, что хотите удалить устройство <strong>"{{ device.inventory_number|default:device.id }}"</strong>?</p>
                 <p class="text-danger">Это действие нельзя отменить!</p>
             </div>
             <div class="modal-footer">

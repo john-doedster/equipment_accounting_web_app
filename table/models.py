@@ -26,6 +26,26 @@ class Device(models.Model):
         WRITTEN_OFF = 'OFF', _('Списано')
 
     name = models.CharField(max_length=100, verbose_name=_("Название устройства"))
+
+    acceptance_date = models.DateField(
+        _("Дата принятия к учету"),
+        null=True,
+        blank=True
+    )
+    
+    book_value = models.DecimalField(
+        _("Балансовая стоимость"),
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+    
+    quantity = models.PositiveIntegerField(
+        _("Количество"),
+        default=1
+    )
+
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
@@ -44,10 +64,26 @@ class Device(models.Model):
         default=Status.IN_STOCK,
         verbose_name=_("Статус")
     )
-    location = models.CharField(max_length=100, blank=True, verbose_name=_("Местоположение"))
     description = models.TextField(blank=True, verbose_name=_("Описание"))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Дата создания"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Дата обновления"))
+
+    LOCATION_CHOICES = [
+        ('office_101', 'Кабинет 101'),
+        ('office_102', 'Кабинет 102'),
+        ('office_201', 'Кабинет 201'),
+        ('office_202', 'Кабинет 202'),
+        ('server_room', 'Серверная'),
+        ('warehouse', 'Склад'),
+    ]
+    
+    location = models.CharField(
+        'Расположение',
+        max_length=50,
+        choices=LOCATION_CHOICES,
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return f"{self.name} ({self.inventory_number})"
