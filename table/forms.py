@@ -7,16 +7,18 @@ from .models import Device, Category, ImportedDevice
 
 class DeviceForm(forms.ModelForm):
     acceptance_date = forms.DateField(
+        label=_("Дата принятия к учету"),  # Явно указываем метку
         widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
         input_formats=['%Y-%m-%d', '%d.%m.%Y'],
         required=False
     )
     
     book_value = forms.DecimalField(
+        label=_("Балансовая стоимость"),  # Явно указываем метку
         max_digits=12,
         decimal_places=2,
         widget=forms.NumberInput(attrs={
-            'step': '0.01',
+            'step': '1000',
             'class': 'form-control',
             'min': '0'
         }),
@@ -24,6 +26,7 @@ class DeviceForm(forms.ModelForm):
     )
     
     quantity = forms.IntegerField(
+        label=_("Количество"),  # Явно указываем метку
         widget=forms.NumberInput(attrs={
             'min': '1',
             'class': 'form-control'
@@ -45,6 +48,14 @@ class DeviceForm(forms.ModelForm):
             "quantity",
             "description",
         ]
+        labels = {  # Добавляем блок с метками
+            "name": _("Название устройства"),
+            "category": _("Категория"),
+            "inventory_number": _("Инвентарный номер"),
+            "status": _("Статус"),
+            "location": _("Местоположение"),
+            "description": _("Описание"),
+        }
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
             "inventory_number": forms.TextInput(attrs={"class": "form-control"}),
@@ -59,6 +70,7 @@ class DeviceForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['category'].label = _("Категория")  # На всякий случай дублируем
         self.fields["category"].queryset = Category.objects.all().order_by("name")
         self.fields["category"].empty_label = "Выберите категорию"
         self.fields["category"].widget.attrs.update({"class": "form-select"})
@@ -85,6 +97,8 @@ class DeviceForm(forms.ModelForm):
                 _("Устройство с таким инвентарным номером уже существует")
             )
         return inventory_number
+
+
 
 class ExportForm(forms.Form):
     COLUMN_CHOICES = [
