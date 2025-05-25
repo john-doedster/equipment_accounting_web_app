@@ -122,20 +122,34 @@ def export_devices_to_excel(request):
     ws = wb.active
     ws.title = "Устройства"
 
-    # Простые заголовки без стилей
-    ws.append(["ID", "Название", "Категория", "Инв.номер"])
+    # Заголовки как в таблице на главной странице
+    headers = [
+        "№ п/п",
+        "Название",
+        "Категория",
+        "Инвентарный номер",
+        "Расположение",
+        "Дата принятия к учету",
+        "Балансовая стоимость",
+        "Количество",
+        "Статус"
+    ]
+    ws.append(headers)
 
     # Данные
-    devices = Device.objects.select_related("category")
-    for device in devices:
-        ws.append(
-            [
-                device.id,
-                device.name,
-                device.category.name if device.category else "",
-                device.inventory_number,
-            ]
-        )
+    devices = Device.objects.select_related("category").all()
+    for index, device in enumerate(devices, start=1):
+        ws.append([
+            index,  # № п/п
+            device.name or "-",
+            device.category.name if device.category else "-",
+            device.inventory_number or "-",
+            device.get_location_display() or "-",
+            device.acceptance_date.strftime("%d.%m.%Y") if device.acceptance_date else "-",
+            device.book_value or "-",
+            device.quantity or "1",
+            device.get_status_display() or "-"
+        ])
 
     # Настройка ответа
     response = HttpResponse(

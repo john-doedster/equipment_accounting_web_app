@@ -46,14 +46,14 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-md-3">
+            {% comment %} <div class="col-md-3">
                 <select name="category" class="form-select">
                     <option value="">Все категории</option>
                     {% for category in categories %}
                     <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
                     {% endfor %}
                 </select>
-            </div>
+            </div> {% endcomment %}
             <div class="col-md-2">
                 <button type="submit" class="btn btn-primary w-100">Применить</button>
             </div>
