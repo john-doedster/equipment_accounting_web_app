@@ -1,6 +1,7 @@
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
+from openpyxl import Workbook
 
 from carts.models import Cart
 from carts.utils import get_user_carts
@@ -40,10 +41,8 @@ def cart_add(request):
         "message": "Продукт добавлен в корзину",
         "cart_items_html": cart_items_html,
     }
-
     return JsonResponse(response_data)
     
-
 
 def cart_change(request):
     cart_id = request.POST.get("cart_id")
@@ -68,8 +67,6 @@ def cart_change(request):
     return JsonResponse(response_data)
 
 
-
-
 def cart_remove(request):
     
     cart_id = request.POST.get("cart_id")
@@ -91,4 +88,50 @@ def cart_remove(request):
     }
 
     return JsonResponse(response_data)
+
+def download_cart_excel(request):
+    # Получаем корзину текущего пользователя
+    carts = Cart.objects.filter(user=request.user)
+    
+    # Создаем книгу Excel
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Корзина"
+    
+    # Добавляем заголовки
+    headers = ["ID", "Товар", "Количество", "Цена за шт.", "Скидка", "Итоговая цена"]
+    ws.append(headers)
+    
+    # Добавляем данные
+    for cart in carts:
+        product = cart.product
+        total_price = cart.quantity * product.sell_price()
+        
+        ws.append([
+            product.id,
+            product.name,
+            cart.quantity,
+            product.price,
+            f"{product.discount}%" if product.discount else "Нет",
+            total_price
+        ])
+    
+    # Добавляем итоговую строку
+    total_quantity = sum(cart.quantity for cart in carts)
+    total_sum = sum(cart.quantity * cart.product.sell_price() for cart in carts)
+    
+    ws.append(["", "ИТОГО:", total_quantity, "", "", total_sum])
+    
+    # Настраиваем стили для итоговой строки
+    for cell in ws[ws.max_row]:
+        cell.font = cell.font.copy(bold=True)
+    
+    # Создаем HTTP ответ
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
+    response['Content-Disposition'] = 'attachment; filename=cart.xlsx'
+    wb.save(response)
+    
+    return response
 
