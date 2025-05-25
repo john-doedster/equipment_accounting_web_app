@@ -69,12 +69,23 @@ class Device(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Дата обновления"))
 
     LOCATION_CHOICES = [
-        ('office_101', 'Кабинет 101'),
-        ('office_102', 'Кабинет 102'),
-        ('office_201', 'Кабинет 201'),
-        ('office_202', 'Кабинет 202'),
+
+        ('office400p', 'Кабинет 400п'),
+        ('office400l', 'Кабинет 400л'),
+        ('office400a', 'Кабинет 400а'),
+        ('office401', 'Кабинет 401'),
+        ('office402', 'Кабинет 402'),
+        ('office402a', 'Кабинет 402а'),
+        ('office403a', 'Кабинет 403а'),
+        ('office403p', 'Кабинет 403п'),
+        ('office404', 'Кабинет 404'),
+        ('office406', 'Кабинет 406'),
+        ('office408', 'Кабинет 408'),
+        ('office410', 'Кабинет 410'),
         ('server_room', 'Серверная'),
         ('warehouse', 'Склад'),
+
+        # 400п 400л 400а 401 402 402а 403а 403п 404 406 408 403 405 408 407 410 412 407 409 412а 412б 414
     ]
     
     location = models.CharField(
@@ -95,6 +106,9 @@ class Device(models.Model):
         verbose_name = _("Устройство")
         verbose_name_plural = _("Устройства")
         ordering = ['-created_at']
+
+
+
 
 class ImportedDevice(models.Model):
     row_number = models.CharField(max_length=50, verbose_name="№ п/п")
