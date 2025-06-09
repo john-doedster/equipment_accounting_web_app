@@ -64,14 +64,20 @@ def cart_change(request):
     # Определяем какой шаблон использовать
     if request.GET.get('modal') == 'true':
         template = "carts/includes/included_cart_modal.html"
+        # Для модального окна возвращаем весь HTML
+        cart_items_html = render_to_string(
+            template, {
+                "carts": user_cart,
+                "title": "Список оборудования"
+            }, request=request)
     else:
         template = "carts/includes/included_cart.html"
-    
-    cart_items_html = render_to_string(
-        template, {
-            "carts": user_cart,
-            "title": "Список оборудования"
-        }, request=request)
+        # Для обычной страницы возвращаем только список
+        cart_items_html = render_to_string(
+            template, {
+                "carts": user_cart,
+                "title": "Список оборудования"
+            }, request=request)
 
     response_data = {
         "message": "Количество изменено",
@@ -89,7 +95,7 @@ def cart_remove(request):
 
     user_cart = get_user_carts(request)
     
-    # Генерируем HTML для обоих случаев (обычный и модальный)
+    # Генерируем только часть HTML с товарами
     cart_items_html = render_to_string(
         "carts/includes/included_cart.html", {
             "carts": user_cart,
@@ -145,4 +151,13 @@ def download_cart_excel(request):
         return response
         
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def cart_modal_content(request):
+    user_cart = get_user_carts(request)
+    cart_items_html = render_to_string(
+        "carts/includes/included_cart_modal.html", {
+            "carts": user_cart,
+            "title": "Список оборудования"
+        }, request=request)
+    return HttpResponse(cart_items_html)
 

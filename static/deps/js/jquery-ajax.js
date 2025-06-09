@@ -53,12 +53,12 @@ $(document).ready(function () {
 
 
 
-
     // Ловим событие клика по кнопке удалить товар из корзины
+// Модифицируем обработчик удаления товара
 $(document).on("click", ".remove-from-cart", function (e) {
     e.preventDefault();
-    console.log("Remove button clicked");
-
+    saveFormData();
+    
     var $button = $(this);
     var cart_id = $button.data("cart-id");
     var csrf_token = $button.find("[name=csrfmiddlewaretoken]").val();
@@ -73,20 +73,19 @@ $(document).on("click", ".remove-from-cart", function (e) {
             csrfmiddlewaretoken: csrf_token
         },
         success: function (data) {
-            console.log("Success response:", data);
-            
             // Обновляем счетчик товаров в корзине
             $("#goods-in-cart-count").text(data.cart_total_quantity);
             
-            // Полное обновление содержимого корзины
-            if (data.cart_items_html) {
-                $("#cart-items-container").html(data.cart_items_html);
+            // Если это модальное окно, обновляем его содержимое
+            if (is_modal) {
+                $(".modal-body").html(data.modal_html);
+            } else {
+                // Иначе обновляем обычную корзину
+                $("#cart-items-list").html($(data.cart_items_html).find("#cart-items-list").html());
             }
             
-            // Обновляем модальное окно, если действие было из него
-            if (is_modal && data.modal_html) {
-                $(".cart-modal-content").html(data.modal_html);
-            }
+            // Восстанавливаем данные формы
+            restoreFormData();
             
             // Показываем уведомление
             if (data.message) {
@@ -95,19 +94,6 @@ $(document).on("click", ".remove-from-cart", function (e) {
                 setTimeout(function() {
                     successMessage.fadeOut(400);
                 }, 7000);
-            }
-            
-            // Если корзина пуста, скрываем кнопки действий
-            if (data.cart_total_quantity === 0) {
-                $(".cart-actions").hide();
-                if (is_modal) {
-                    $(".cart-modal-content").html(
-                        '<div class="text-center py-4">' +
-                        '<h5 class="mt-3">Список пуст</h5>' +
-                        '<p>Добавьте оборудование</p>' +
-                        '</div>'
-                    );
-                }
             }
         },
         error: function (xhr) {
@@ -119,6 +105,11 @@ $(document).on("click", ".remove-from-cart", function (e) {
             }, 7000);
         }
     });
+});
+
+// Добавляем восстановление данных при загрузке страницы
+$(document).ready(function() {
+    restoreFormData();
 });
 
 
@@ -160,41 +151,82 @@ $(document).on("click", ".remove-from-cart", function (e) {
         updateCart(cartID, currentValue + 1, 1, url);
     });
 
-    function updateCart(cartID, quantity, change, url) {
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: {
-                cart_id: cartID,
-                quantity: quantity,
-                csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
-            },
 
-            success: function (data) {
-                // Сообщение
-                successMessage.html(data.message);
-                successMessage.fadeIn(400);
-                // Через 7сек убираем сообщение
-                setTimeout(function () {
-                    successMessage.fadeOut(400);
-                }, 7000);
+// Функция для сохранения данных формы перед обновлением корзины
+function saveFormData() {
+    const formData = {
+        fullName: $('#userFullName').val(),
+        position: $('#userPosition').val(),
+        conditions: []
+    };
+    
+    $('.condition-select').each(function() {
+        formData.conditions.push($(this).val());
+    });
+    
+    sessionStorage.setItem('cartFormData', JSON.stringify(formData));
+}
 
-                // Изменяем количество товаров в корзине
-                var goodsInCartCount = $("#goods-in-cart-count");
-                var cartCount = parseInt(goodsInCartCount.text() || 0);
-                cartCount += change;
-                goodsInCartCount.text(cartCount);
-
-                // Меняем содержимое корзины
-                var cartItemsContainer = $("#cart-items-container");
-                cartItemsContainer.html(data.cart_items_html);
-
-            },
-            error: function (data) {
-                console.log("Ошибка при добавлении оборудования в список");
-            },
+// Функция для восстановления данных формы после обновления корзины
+function restoreFormData() {
+    const savedData = sessionStorage.getItem('cartFormData');
+    if (savedData) {
+        const formData = JSON.parse(savedData);
+        
+        $('#userFullName').val(formData.fullName);
+        $('#userPosition').val(formData.position);
+        
+        $('.condition-select').each(function(index) {
+            if (index < formData.conditions.length) {
+                $(this).val(formData.conditions[index]);
+            }
         });
     }
+}
+
+
+function updateCart(cartID, quantity, change, url) {
+    saveFormData();
+    var is_modal = url.includes('modal=true');
+    
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+            cart_id: cartID,
+            quantity: quantity,
+            csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
+        },
+        success: function (data) {
+            // Сообщение
+            successMessage.html(data.message);
+            successMessage.fadeIn(400);
+            // Через 7сек убираем сообщение
+            setTimeout(function () {
+                successMessage.fadeOut(400);
+            }, 7000);
+
+            // Изменяем количество товаров в корзине
+            var goodsInCartCount = $("#goods-in-cart-count");
+            var cartCount = parseInt(goodsInCartCount.text() || 0);
+            cartCount += change;
+            goodsInCartCount.text(cartCount);
+
+            // Обновляем содержимое в зависимости от контекста
+            if (is_modal) {
+                $(".modal-body").html(data.cart_items_html);
+            } else {
+                $("#cart-items-list").html($(data.cart_items_html).find("#cart-items-list").html());
+            }
+            
+            // Восстанавливаем данные формы
+            restoreFormData();
+        },
+        error: function (data) {
+            console.log("Ошибка при изменении количества оборудования");
+        },
+    });
+}
 
     // Берем из разметки элемент по id - оповещения от django
     var notification = $('#notification');
@@ -205,12 +237,25 @@ $(document).on("click", ".remove-from-cart", function (e) {
         }, 7000);
     }
 
-    // При клике по значку корзины открываем всплывающее(модальное) окно
-    $('#modalButton').click(function () {
-        $('#exampleModal').appendTo('body');
-
-        $('#exampleModal').modal('show');
+// При клике по значку корзины открываем всплывающее(модальное) окно
+$(document).on('click', '#modalButton', function() {
+    // Переносим модальное окно в body (решает проблемы с z-index)
+    $('#exampleModal').appendTo('body');
+    
+    // Показываем модальное окно сразу
+    $('#exampleModal').modal('show');
+    
+    // Дополнительно загружаем свежие данные (опционально)
+    $.ajax({
+        url: "{% url 'cart:cart_modal_content' %}",
+        success: function(data) {
+            $(".modal-body").html(data);
+        },
+        error: function() {
+            console.log("Ошибка при загрузке корзины");
+        }
     });
+});
 
     // Собыите клик по кнопке закрыть окна корзины
     $('#exampleModal .btn-close').click(function () {

@@ -2,7 +2,7 @@
 
 <div class="card mb-3 text-bg-light shadow-lg">
     <!-- Блок для ввода общих данных -->
-    <div class="card-header bg-primary text-white">
+    <div class="card-header bg-primary text-white" id="user-data-section">
         <div class="row">
             <div class="col-md-6">
                 <div class="mb-3">
@@ -25,51 +25,53 @@
     </div>
 
     <!-- Список оборудования -->
-    {% for cart in carts %}
-        <div class="card-header">
-            <h5 class="card-title">{{ cart.product.name }} (ID: {{ cart.product.id }})</h5>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-                <div class="row text-center">
-                    <div class="col p-0">
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm decrement"
-                                    data-cart-id="{{ cart.id }}"
-                                    data-cart-change-url="{% url "cart:cart_change"%}">
-                                    {% csrf_token %}
-                                    -</button>
-                            </span>
-                            <input type="text" class="form-control number" value="{{ cart.quantity }}"
-                                readonly>
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-dark btn-sm increment"
-                                    data-cart-id="{{ cart.id }}"
-                                    data-cart-change-url="{% url "cart:cart_change" %}">
-                                    {% csrf_token %}
-                                    +</button>
-                            </span>
+    <div id="cart-items-list">
+        {% for cart in carts %}
+            <div class="card-header">
+                <h5 class="card-title">{{ cart.product.name }} (ID: {{ cart.product.id }})</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="row text-center">
+                        <div class="col p-0">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-dark btn-sm decrement"
+                                        data-cart-id="{{ cart.id }}"
+                                        data-cart-change-url="{% url "cart:cart_change"%}">
+                                        {% csrf_token %}
+                                        -</button>
+                                </span>
+                                <input type="text" class="form-control number" value="{{ cart.quantity }}"
+                                    readonly>
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-dark btn-sm increment"
+                                        data-cart-id="{{ cart.id }}"
+                                        data-cart-change-url="{% url "cart:cart_change" %}">
+                                        {% csrf_token %}
+                                        +</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col p-0">
+                            <select class="form-select condition-select" data-cart-id="{{ cart.id }}" required>
+                                <option value="" selected disabled>Выберите состояние</option>
+                                <option value="Исправно">Исправно</option>
+                                <option value="Нужен ремонт">Нужен ремонт</option>
+                                <option value="Неисправно">Неисправно</option>
+                            </select>
+                        </div>
+                        <div class="col p-0">
+                        <a href="{% url 'cart:cart_remove' %}" class="remove-from-cart" data-cart-id="{{ cart.id }}">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            <img class="mx-1" src="{% static 'deps/icons/trash3-fill.svg' %}" alt="Catalog Icon" width="16" height="16">
+                        </a>
                         </div>
                     </div>
-                    <div class="col p-0">
-                        <select class="form-select condition-select" data-cart-id="{{ cart.id }}" required>
-                            <option value="" selected disabled>Выберите состояние</option>
-                            <option value="Исправно">Исправно</option>
-                            <option value="Нужен ремонт">Нужен ремонт</option>
-                            <option value="Неисправно">Неисправно</option>
-                        </select>
-                    </div>
-                    <div class="col p-0">
-                    <a href="{% url 'cart:cart_remove' %}" class="remove-from-cart" data-cart-id="{{ cart.id }}">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-                        <img class="mx-1" src="{% static 'deps/icons/trash3-fill.svg' %}" alt="Catalog Icon" width="16" height="16">
-                    </a>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    {% endfor %}
+                </li>
+            </ul>
+        {% endfor %}
+    </div>
 </div>
 
 {% if carts and not order %}
