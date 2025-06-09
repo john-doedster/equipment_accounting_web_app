@@ -53,14 +53,14 @@
             <div class="col-md-8 d-flex flex-column">
                 <div class="card-body product-description">
                     <p class="product_id mt-3">id: {{ product.display_id }}</p>
-                    <p class="card-text"><span class="price-label">Цена:</span> <strong class="price-text">{{ product.price }}</strong></p>
+                    {% comment %} <p class="card-text"><span class="price-label">Цена:</span> <strong class="price-text">{{ product.price }}</strong></p> {% endcomment %}
                     <h5 class="card-title product-title">{{ product.name }}</h5>
                     <p class="card-text product-text">{{ product.description }}</p>
                     <a href="{% url 'cart:cart_add' %}" 
                        class="btn btn-dark add-to-cart-btn add-to-cart"
                        data-product-id="{{ product.id }}">
                         {% csrf_token %}
-                        Добавить в корзину
+                        Добавить в список
                     </a>
                 </div>
             </div>

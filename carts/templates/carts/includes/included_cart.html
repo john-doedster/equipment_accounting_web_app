@@ -1,10 +1,33 @@
 {% load static %}
 
-
 <div class="card mb-3 text-bg-light shadow-lg">
+    <!-- Блок для ввода общих данных -->
+    <div class="card-header bg-primary text-white">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="userFullName" class="form-label">ФИО ответственного:</label>
+                    <input type="text" class="form-control" id="userFullName" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="userPosition" class="form-label">Должность:</label>
+                    <select class="form-select" id="userPosition" required>
+                        <option value="" selected disabled>Выберите должность</option>
+                        <option value="Сотрудник">Сотрудник</option>
+                        <option value="Лаборант">Лаборант</option>
+                        <option value="Студент">Студент</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список оборудования -->
     {% for cart in carts %}
         <div class="card-header">
-            <h5 class="card-title">{{ cart.product.name }}</h5>
+            <h5 class="card-title">{{ cart.product.name }} (ID: {{ cart.product.id }})</h5>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">
@@ -30,35 +53,94 @@
                         </div>
                     </div>
                     <div class="col p-0">
-                        <p>x {{ cart.product.sell_price }} = </p>
+                        <select class="form-select condition-select" data-cart-id="{{ cart.id }}" required>
+                            <option value="" selected disabled>Выберите состояние</option>
+                            <option value="Исправно">Исправно</option>
+                            <option value="Нужен ремонт">Нужен ремонт</option>
+                            <option value="Неисправно">Неисправно</option>
+                        </select>
                     </div>
-                    <div class="col p-0"><strong> {{cart.products_price}} Руб.</strong></div>
                     <div class="col p-0">
-                        <a href="{% url "cart:cart_remove"%}" class="remove-from-cart"
-                        data-cart-id="{{ cart.id }}">
-                            {% csrf_token %}
-                            <img class="mx-1" src="{% static "deps/icons/trash3-fill.svg" %}"
-                                alt="Catalog Icon" width="16" height="16">
-                        </a>
+                    <a href="{% url 'cart:cart_remove' %}" class="remove-from-cart" data-cart-id="{{ cart.id }}">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                        <img class="mx-1" src="{% static 'deps/icons/trash3-fill.svg' %}" alt="Catalog Icon" width="16" height="16">
+                    </a>
                     </div>
                 </div>
             </li>
         </ul>
     {% endfor %}
 </div>
-<div class="card mb-3 shadow-lg">
-    <div class="card-footer">
-        <p class="float-left">Итого <strong>{{ carts.total_quantity }}</strong> товар(а) на сумму</p>
-        <h4 class="float-left"><strong>{{ carts.total_price }} Руб.</strong></h4>
-    </div>
-</div>
+
 {% if carts and not order %}
-<div class="d-flex gap-3">  {# Добавлен контейнер с отступами между кнопками #}
+<div class="d-flex gap-3">
     <a class="btn btn-dark flex-grow-1" href="{% url "orders:create_order" %}">
-        Оформить заказ
+        Записать оборудование
     </a>
-    <a href="{% url 'cart:download_cart_excel' %}" class="btn btn-success flex-grow-1">
-        <i class="bi bi-file-excel me-2"></i>Скачать Excel
-    </a>
+    <button id="downloadExcelBtn" class="btn btn-success flex-grow-1">
+        <i class="bi bi-file-excel me-2"></i>Скачать отчёт в Excel
+    </button>
 </div>
 {% endif %}
+
+<!-- Встроенный JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработчик для кнопки скачивания Excel
+    document.getElementById('downloadExcelBtn').addEventListener('click', function() {
+        // Проверяем заполнение обязательных полей
+        const fullName = document.getElementById('userFullName').value.trim();
+        const position = document.getElementById('userPosition').value;
+        
+        if (!fullName || !position) {
+            alert('Пожалуйста, заполните ФИО и выберите должность');
+            return;
+        }
+        
+        // Собираем данные о состоянии оборудования
+        const conditionSelects = document.querySelectorAll('.condition-select');
+        const conditions = Array.from(conditionSelects).map(select => {
+            return select.value || 'Не указано';
+        });
+        
+        // Проверяем, что для всех позиций выбрано состояние
+        if (conditions.some(cond => cond === 'Не указано')) {
+            alert('Пожалуйста, укажите состояние для всего оборудования');
+            return;
+        }
+        
+        // Создаем форму для отправки данных
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{% url 'cart:download_cart_excel' %}";
+        
+        // Добавляем CSRF-токен
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfInput = document.createElement('input');
+        csrfInput.type = 'hidden';
+        csrfInput.name = 'csrfmiddlewaretoken';
+        csrfInput.value = csrfToken;
+        form.appendChild(csrfInput);
+        
+        // Добавляем данные
+        const addInput = (name, value) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            form.appendChild(input);
+        };
+        
+        addInput('full_name', fullName);
+        addInput('position', position);
+        
+        conditions.forEach((condition, index) => {
+            addInput(`conditions[]`, condition);
+        });
+        
+        // Отправляем форму
+        document.body.appendChild(form);
+        form.submit();
+    });
+});
+</script>

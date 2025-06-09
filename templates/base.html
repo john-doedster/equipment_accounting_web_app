@@ -42,11 +42,15 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item  text-white" href="{% url 'main:contacts' %}">Контактная информация</a></li>
-                                <li><a class="dropdown-item  text-white" href="{% url "main:about" %}">Про нас</a></li>
+                                <li><a class="dropdown-item  text-white" href="{% url "main:about" %}">О приложении</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Корзина</a>
+                            <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Список</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="#">Статистика</a>
                         </li>
 
                         {% if user.is_authenticated %}
@@ -54,9 +58,6 @@
                             <a class="nav-link text-white" href="{% url 'table:device_list' %}">Учёт</a>
                         </li>
 
-                        {% comment %} <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'table:saved_tables_list' %}">Мои таблицы</a>
-                        </li> {% endcomment %}
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'table:saved_tables_list' %}">
                                 <i class="bi bi-collection"></i> Таблицы
@@ -65,10 +66,6 @@
                         
 
                         {% endif %}
-
-                        {% comment %} <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'custom_tables:table_list' %}">Альтернативные таблицы</a>
-                        </li> {% endcomment %}
 
                         {% if not user.is_authenticated %}
                         <li class="nav-item">

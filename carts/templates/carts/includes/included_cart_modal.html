@@ -1,0 +1,60 @@
+{% load static %}
+
+<div class="cart-modal-content">
+    {% if carts %}
+        <div class="card mb-3 text-bg-light shadow-lg">
+            {% for cart in carts %}
+                <div class="card-header">
+                    <h5 class="card-title">{{ cart.product.name }} (ID: {{ cart.product.id }})</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row text-center">
+                            <div class="col p-0">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-dark btn-sm decrement"
+                                            data-cart-id="{{ cart.id }}"
+                                            data-cart-change-url="{% url 'cart:cart_change' %}?modal=true">
+                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                            -
+                                        </button>
+                                    </span>
+                                    <input type="text" class="form-control number" value="{{ cart.quantity }}" readonly>
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-dark btn-sm increment"
+                                            data-cart-id="{{ cart.id }}"
+                                            data-cart-change-url="{% url 'cart:cart_change' %}?modal=true">
+                                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                            +
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col p-0">
+                                <a href="{% url 'cart:cart_remove' %}?modal=true" class="remove-from-cart" 
+                                   data-cart-id="{{ cart.id }}">
+                                    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                    <img class="mx-1" src="{% static 'deps/icons/trash3-fill.svg' %}" 
+                                         alt="Удалить" width="16" height="16">
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            {% endfor %}
+        </div>
+        
+        <div class="modal-footer cart-actions">
+            <a href="{% url 'user:users_cart' %}" class="btn btn-dark w-100">Перейти к записи</a>
+        </div>
+    {% else %}
+        <div class="text-center py-4">
+            <h5 class="mt-3">Список пуст</h5>
+            <p>Добавьте оборудование</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+    {% endif %}
+</div>

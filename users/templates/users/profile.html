@@ -84,23 +84,18 @@
             {% user_carts request as carts%}
             <div class="col-md-7">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
-                    <h3 class="text-center mb-4">Корзина</h3>
+                    <h3 class="text-center mb-4">Список оборудования</h3>
                     <div class="container" id="cart-items-container">
                         <!-- Разметка корзины -->
                         {% include "carts/includes/included_cart.html" %}
                         <!-- Закончилась разметка корзины -->
                     </div>
-                    {% comment %} {% if carts %}
-                    <a class="btn btn-dark" href="../orders/create_order.html">
-                        Оформить заказ
-                    </a>
-                    {% endif %} {% endcomment %}
                 </div>
             </div>
             <!-- Оформленные заказы -->
             <div class="col-md-12">
                 <div class=" bg-white p-4 mb-4 mx-2 rounded custom-shadow">
-                    <h3 class="text-center mb-4">Мои заказы</h3>
+                    <h3 class="text-center mb-4">Моё оборудование</h3>
                     <!-- Разметка заказов -->
                     <div class="container">
                         <div class="accordion" id="accordionExample">

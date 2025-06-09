@@ -115,11 +115,11 @@
                 </p>
                 <p class="product_id">id: {{ product.display_id }}</p>
                 <div class="d-flex justify-content-between align-items-center">
-                    <p class="mb-0"><strong>{{ product.price }} ₽</strong></p>
+                    {% comment %} <p class="mb-0"><strong>{{ product.price }} ₽</strong></p> {% endcomment %}
                     <a href="{% url "cart:cart_add" %}" class="btn add-to-cart"
                     data-product-id="{{ product.id }}">
                         {% csrf_token %}
-                        <img class="mx-1" src="{% static "/deps/icons/cart-plus.png" %}" alt="Добавить в корзину"
+                        <img class="mx-1" src="{% static "/deps/icons/cart-plus.png" %}" alt="Добавить в список"
                             width="42" height="42">
                     </a>
                 </div>

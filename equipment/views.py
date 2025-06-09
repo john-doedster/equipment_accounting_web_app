@@ -39,7 +39,9 @@ def product(request,product_slug):
     product=Products.objects.get(slug=product_slug)
 
     context = {
-        "product": product
+        "product": product,
+        "title": "Подробнее об устройстве",
+        "slug_url": product.category.slug
     }
 
     return render(request, "equipment/product.html", context=context)

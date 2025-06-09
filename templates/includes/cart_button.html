@@ -4,34 +4,23 @@
 {% user_carts request as carts %}
 
 <div>
-    <button type="button" class="btn btn-dark btn-secondary d-flex cart-modal-button" id="modalButton"
-        aria-expanded="false">
-        <img class="mx-1" src="{% static "deps/icons/table_icon.png" %}" alt="Catalog Icon" width="68"
-            height="64">
-        <span id="goods-in-cart-count" class="cart-counter">{{ carts.total_quantity }}</span>
+    <button type="button" class="btn btn-dark btn-secondary d-flex cart-modal-button" id="modalButton">
+        <img src="{% static 'deps/icons/table_icon.png' %}" width="68" height="64">
+        <span id="goods-in-cart-count">{{ carts.total_quantity }}</span>
     </button>
 </div>
 
-<!-- Модальное окно корзины -->
-<div class="modal fade cart-modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content cart-modal-content">
-            <div class="modal-header cart-modal-header">
-                <h3 class="modal-title cart-modal-title" id="exampleModalLabel">Ваша корзина</h3>
-                <button type="button" class="btn-close cart-close-btn" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+<div class="modal fade" id="exampleModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ваше выбранное оборудование</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body cart-modal-body">
-                <div class="container" id="cart-items-container">
-                    <!-- Включенная разметка корзины -->
-                    <div class="cart-items-wrapper">
-                        {% include "carts/includes/included_cart.html" %}
-                    </div>
-                    <!-- Конец разметки корзины -->
-                </div>
-
+            <div class="modal-body">
+                {% include "carts/includes/included_cart_modal.html" %}
             </div>
+            <!-- Футер убран отсюда, он будет в included_cart_modal.html -->
         </div>
     </div>
 </div>
