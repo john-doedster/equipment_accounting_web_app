@@ -20,6 +20,31 @@
         flex: 1 0 auto;
         padding-bottom: 60px;
     }
+
+    .modal-image-container {
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    .modal-content {
+        background-color: transparent !important;
+        border: none !important;
+    }
+
+    .btn-close {
+        filter: invert(1) brightness(100%);
+        opacity: 1;
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .btn-close:hover {
+        opacity: 0.8;
+    }
+
     
     footer {
         flex-shrink: 0;
@@ -28,6 +53,46 @@
         padding: 20px 0;
         margin-top: auto;
     }
+
+    .qr-container {
+        margin: 20px auto;
+        max-width: 250px;
+        text-align: center;
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .qr-code-img {
+        width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto 10px;
+        border: 1px solid #eee;
+        padding: 5px;
+        background: white;
+    }
+
+    .qr-block {
+        display: inline-block;
+        text-align: center;
+        padding: 8px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .qr-block img {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .qr-block p {
+        margin-top: 5px;
+        font-size: 0.8rem;
+    }
+
 </style>
 
 {% endblock css %}
@@ -50,19 +115,27 @@
                     title="Нажмите для увеличения">
             </div>
             
-            <div class="col-md-8 d-flex flex-column">
-                <div class="card-body product-description">
-                    <p class="product_id mt-3">id: {{ product.display_id }}</p>
-                    {% comment %} <p class="card-text"><span class="price-label">Цена:</span> <strong class="price-text">{{ product.price }}</strong></p> {% endcomment %}
-                    <h5 class="card-title product-title">{{ product.name }}</h5>
-                    <p class="card-text product-text">{{ product.description }}</p>
-                    <a href="{% url 'cart:cart_add' %}" 
-                       class="btn btn-dark add-to-cart-btn add-to-cart"
-                       data-product-id="{{ product.id }}">
-                        {% csrf_token %}
-                        Добавить в список
-                    </a>
-                </div>
+<div class="col-md-8 d-flex flex-column">
+    <div class="card-body product-description">
+        <p class="product_id mt-3">id: {{ product.display_id }}</p>
+        <h5 class="card-title product-title">{{ product.name }}</h5>
+        <p class="card-text product-text">{{ product.description }}</p>
+        
+        {# Обновленный блок QR-кода #}
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <a href="{% url 'cart:cart_add' %}" 
+               class="btn btn-dark add-to-cart-btn add-to-cart"
+               data-product-id="{{ product.id }}">
+                {% csrf_token %}
+                Добавить в список
+            </a>
+            
+            <div class="qr-block text-end ms-3">
+                <img src="{{ qr_code }}" 
+                     alt="QR-код {{ product.name }}" 
+                     class="img-thumbnail" 
+                     style="width: 120px; height: 120px;">
+                <p class="mt-1 small fw-bold text-primary">Наведите камеру →</p>
             </div>
         </div>
     </div>
@@ -72,17 +145,39 @@
 <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0">
-            <div class="modal-close-btn" data-bs-dismiss="modal" aria-label="Закрыть"></div>
-            <div class="modal-image-container">
+            <div class="modal-header border-0" style="position: absolute; top: 10px; right: 10px; z-index: 1;">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-image-container text-center">
                 <img src="{{ product.image.url }}" 
-                     class="modal-image" 
-                     alt="Увеличенное изображение {{ product.name }}">
+                     class="modal-image img-fluid" 
+                     alt="Увеличенное изображение {{ product.name }}"
+                     style="max-height: 80vh; width: auto;">
             </div>
         </div>
     </div>
 </div>
 
+<script>
+// Обработчик для модального окна изображения
+document.addEventListener('DOMContentLoaded', function() {  
+    // Закрытие по ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = bootstrap.Modal.getInstance(imageModal);
+            modal.hide();
+        }
+    });
+    
+    // Улучшение для мобильных устройств
+    if ('ontouchstart' in window) {
+        imageModal.style.touchAction = 'manipulation';
+    }
+});
+</script>
+
 {% endblock %}
+
 
 {% block footer %}
 <footer class="py-4 bg-dark">
@@ -91,3 +186,4 @@
     </div>
 </footer>
 {% endblock footer %}
+
