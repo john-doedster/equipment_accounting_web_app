@@ -17,7 +17,8 @@ def create_order(request):
             user=request.user,
             requires_delivery=False,
             payment_on_get=True,
-            status='Принято'
+            status='Принято',
+            office=request.POST.get('office')  # Добавляем кабинет
         )
         
         # Добавляем товары в заказ

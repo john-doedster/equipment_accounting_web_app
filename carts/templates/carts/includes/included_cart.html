@@ -22,6 +22,27 @@
                     </select>
                 </div>
             </div>
+
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="userOffice" class="form-label">Кабинет:</label>
+                    <select class="form-select" id="userOffice" required>
+                        <option value="" selected disabled>Выберите кабинет</option>
+                        <option value="400">400</option>
+                        <option value="400а">400а</option>
+                        <option value="401">401</option>
+                        <option value="402">402</option>
+                        <option value="403">403</option>
+                        <option value="404">404</option>
+                        <option value="405">405</option>
+                        <option value="406">406</option>
+                        <option value="407">407</option>
+                        <option value="408">408</option>
+                    </select>
+                </div>
+            </div>
+
+
         </div>
     </div>
     {% endif %}
@@ -90,6 +111,7 @@
         {% csrf_token %}
         <input type="hidden" name="full_name" id="formFullName">
         <input type="hidden" name="position" id="formPosition">
+        <input type="hidden" name="office" id="formOffice">
         {% for cart in carts %}
             <input type="hidden" name="condition_{{ cart.id }}" class="formCondition" data-cart-id="{{ cart.id }}">
         {% endfor %}
@@ -114,9 +136,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Проверяем заполнение обязательных полей
         const fullName = document.getElementById('userFullName').value.trim();
         const position = document.getElementById('userPosition').value;
+        const office = document.getElementById('userOffice').value;
         
-        if (!fullName || !position) {
-            alert('Пожалуйста, заполните ФИО и выберите должность');
+        if (!fullName || !position || !office) {
+            alert('Пожалуйста, заполните ФИО, выберите должность и кабинет');
             e.preventDefault();
             return;
         }
@@ -124,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Заполняем скрытые поля формы
         document.getElementById('formFullName').value = fullName;
         document.getElementById('formPosition').value = position;
+        document.getElementById('formOffice').value = office;
         
         // Собираем данные о состоянии оборудования
         const conditionSelects = document.querySelectorAll('.condition-select');
@@ -149,9 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Проверяем заполнение обязательных полей
         const fullName = document.getElementById('userFullName').value.trim();
         const position = document.getElementById('userPosition').value;
+        const office = document.getElementById('userOffice').value;
         
-        if (!fullName || !position) {
-            alert('Пожалуйста, заполните ФИО и выберите должность');
+        if (!fullName || !position || !office) {
+            alert('Пожалуйста, заполните ФИО и выберите должность и кабинет');
             return;
         }
         
@@ -191,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         addInput('full_name', fullName);
         addInput('position', position);
+        addInput('office', office);
         
         conditions.forEach((condition, index) => {
             addInput(`conditions[]`, condition);

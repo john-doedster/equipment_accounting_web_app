@@ -115,6 +115,7 @@
                                                     <th>Устройство</th>
                                                     <th>Количество</th>
                                                     <th>Кабинет</th>
+                                                    <th>Состояние</th>
                                                     <th>Дата</th>
                                                 </tr>
                                             </thead>
@@ -123,7 +124,8 @@
                                                 <tr>
                                                     <td><a class="text-white" href="{% url 'equipment:product' item.product.slug %}">{{ item.product.name }}</a></td>
                                                     <td>{{ item.quantity }}</td>
-                                                    <td>{{ item.price }}</td>
+                                                    <td>{{ order.office }}</td>  <!-- Новое поле -->
+                                                    <td>{{ item.condition }}</td>
                                                     <td>{{ order.created_timestamp }}</td>
                                                     
                                                 </tr>

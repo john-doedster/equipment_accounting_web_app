@@ -121,6 +121,7 @@ def download_cart_excel(request):
     if request.method == 'POST':
         full_name = request.POST.get('full_name', '')
         position = request.POST.get('position', '')
+        office = request.POST.get('office', '')  # Новое поле
         conditions = request.POST.getlist('conditions[]')
         carts = Cart.objects.filter(user=request.user)
         
@@ -131,6 +132,7 @@ def download_cart_excel(request):
         # Заголовки
         ws.append(["ФИО ответственного:", full_name])
         ws.append(["Должность:", position])
+        ws.append(["Кабинет:", office])  # Новое поле
         ws.append([])
         ws.append(["ID", "Название", "Количество", "Состояние"])
         
