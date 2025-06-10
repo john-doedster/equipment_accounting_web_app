@@ -1,71 +1,38 @@
-from django.db import transaction
-from django.contrib import messages  # Правильный импорт для сообщений
-from django.forms import ValidationError
-from django.shortcuts import redirect, render
-
+from django.shortcuts import redirect
+from django.contrib import messages
 from carts.models import Cart
-from orders.forms import CreateOrderForm
-from orders.models import Order, OrderItem
+from .models import Order, OrderItem
 
 def create_order(request):
     if request.method == 'POST':
-        form = CreateOrderForm(data=request.POST)
-        if form.is_valid():
-            try:
-                with transaction.atomic():
-                    user = request.user
-                    cart_items = Cart.objects.filter(user=user)
-
-                    if cart_items.exists():
-                        # Создать заказ
-                        order = Order.objects.create(
-                            user=user,
-                            phone_number=form.cleaned_data['phone_number'],
-                            requires_delivery=form.cleaned_data['requires_delivery'],
-                            delivery_address=form.cleaned_data['delivery_address'],
-                            payment_on_get=form.cleaned_data['payment_on_get'],
-                        )
-                        # Создать заказанные товары
-                        for cart_item in cart_items:
-                            product = cart_item.product
-                            name = cart_item.product.name
-                            price = cart_item.product.sell_price()
-                            quantity = cart_item.quantity
-
-                            if product.quantity < quantity:
-                                raise ValidationError(
-                                    f'Недостаточное количество товара {name} на складе. '
-                                    f'В наличии - {product.quantity}'
-                                )
-
-                            OrderItem.objects.create(
-                                order=order,
-                                product=product,
-                                name=name,
-                                price=price,
-                                quantity=quantity,
-                            )
-                            product.quantity -= quantity
-                            product.save()
-
-                        # Очистить корзину пользователя после создания заказа
-                        cart_items.delete()
-
-                        messages.success(request, 'Заказ оформлен!')  # Теперь это будет работать
-                        return redirect('user:profile')
-            except ValidationError as e:
-                messages.error(request, str(e))  # Лучше использовать error для сообщений об ошибках
-                return redirect('orders:create_order')
-    else:
-        initial = {
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-        }
-        form = CreateOrderForm(initial=initial)
-
-    context = {
-        'title': 'Добавление в таблицу',
-        'form': form,
-        'order': True,
-    }
-    return render(request, 'orders/create_order.html', context=context)
+        # Получаем корзину пользователя
+        carts = Cart.objects.filter(user=request.user)
+        
+        if not carts.exists():
+            messages.error(request, "Ваша корзина пуста")
+            return redirect('users:profile')
+        
+        # Создаем заказ
+        order = Order.objects.create(
+            user=request.user,
+            requires_delivery=False,
+            payment_on_get=True,
+            status='Принято'
+        )
+        
+        # Добавляем товары в заказ
+        for cart in carts:
+            OrderItem.objects.create(
+                order=order,
+                product=cart.product,
+                quantity=cart.quantity,
+                condition=request.POST.get(f'condition_{cart.id}', 'Не указано')
+            )
+        
+        # Очищаем корзину
+        carts.delete()
+        
+        messages.success(request, "Оборудование успешно записано на вас")
+        return redirect('users:profile')
+    
+    return redirect('carts:cart')

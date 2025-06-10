@@ -76,9 +76,17 @@
 
 {% if carts and not order %}
 <div class="d-flex gap-3">
-    <a class="btn btn-dark flex-grow-1" href="{% url "orders:create_order" %}">
-        Записать оборудование
-    </a>
+    <form method="post" action="{% url 'orders:create_order' %}" id="create-order-form">
+        {% csrf_token %}
+        <input type="hidden" name="full_name" id="formFullName">
+        <input type="hidden" name="position" id="formPosition">
+        {% for cart in carts %}
+            <input type="hidden" name="condition_{{ cart.id }}" class="formCondition" data-cart-id="{{ cart.id }}">
+        {% endfor %}
+        <button type="submit" class="btn btn-dark flex-grow-1">
+            Записать оборудование
+        </button>
+    </form>
     <button id="downloadExcelBtn" class="btn btn-success flex-grow-1">
         <i class="bi bi-file-excel me-2"></i>Скачать отчёт в Excel
     </button>
@@ -88,6 +96,42 @@
 <!-- Встроенный JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+        // Обработчик для кнопки "Записать оборудование"
+    document.getElementById('create-order-form').addEventListener('submit', function(e) {
+        // Проверяем заполнение обязательных полей
+        const fullName = document.getElementById('userFullName').value.trim();
+        const position = document.getElementById('userPosition').value;
+        
+        if (!fullName || !position) {
+            alert('Пожалуйста, заполните ФИО и выберите должность');
+            e.preventDefault();
+            return;
+        }
+        
+        // Заполняем скрытые поля формы
+        document.getElementById('formFullName').value = fullName;
+        document.getElementById('formPosition').value = position;
+        
+        // Собираем данные о состоянии оборудования
+        const conditionSelects = document.querySelectorAll('.condition-select');
+        conditionSelects.forEach(select => {
+            const cartId = select.dataset.cartId;
+            const conditionInput = document.querySelector(`.formCondition[data-cart-id="${cartId}"]`);
+            if (conditionInput) {
+                conditionInput.value = select.value;
+            }
+        });
+        
+        // Проверяем, что для всех позиций выбрано состояние
+        const conditions = Array.from(conditionSelects).map(select => select.value);
+        if (conditions.some(cond => !cond)) {
+            alert('Пожалуйста, укажите состояние для всего оборудования');
+            e.preventDefault();
+        }
+    });
+
+
     // Обработчик для кнопки скачивания Excel
     document.getElementById('downloadExcelBtn').addEventListener('click', function() {
         // Проверяем заполнение обязательных полей
