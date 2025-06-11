@@ -1,24 +1,45 @@
 {% extends 'base.html' %}
+{% load stats_filters %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-4 text-white">
-    <h1 class="mb-4">Статистика оборудования</h1>
+<div class="container mt-4">
+    <h1 class="mb-4 text-white">{{ title }}</h1>
     
     <!-- Основные карточки -->
     <div class="row mb-4">
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="card text-white bg-primary">
                 <div class="card-body">
-                    <h5 class="card-title">Всего позиций</h5>
-                    <p class="card-text display-4">{{ total }}</p>
+                    <h5 class="card-title">Всего единиц</h5>
+                    <p class="card-text display-4">{{ total_products }}</p>
+                    <p class="card-text">({{ total_quantity }} шт.)</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
             <div class="card text-white bg-success">
                 <div class="card-body">
-                    <h5 class="card-title">Общее количество</h5>
-                    <p class="card-text display-4">{{ total_quantity }}</p>
+                    <h5 class="card-title">Доступно</h5>
+                    <p class="card-text display-4">{{ available_items }}</p>
+                    <p class="card-text">({{ available_quantity }} шт.)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Закреплено</h5>
+                    <p class="card-text display-4">{{ assigned_items }}</p>
+                    <p class="card-text">({{ assigned_quantity }} шт.)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Категорий</h5>
+                    <p class="card-text display-4">{{ categories_stats|length }}</p>
                 </div>
             </div>
         </div>
@@ -39,23 +60,75 @@
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5>Топ оборудования по количеству</h5>
+                    <h5>Статус оборудования</h5>
                 </div>
                 <div class="card-body">
-                    <ul class="list-group">
-                        {% for product in popular_products %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ product.name }}
-                            <span class="badge bg-primary rounded-pill">{{ product.quantity }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
+                    <canvas id="statusChart" height="250"></canvas>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Динамика выдачи/возврата</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="timelineChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Топ кабинетов</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="roomsChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Таблица популярных товаров -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Топ оборудования по количеству</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th> </th>
+                            <th>Оборудование</th>
+                            <th>Категория</th>
+                            <th>Всего</th>
+                            <th>Закреплено</th>
+                            <th>Доступно</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in popular_products %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.category.name }}</td>
+                            <td>{{ product.quantity }}</td>
+                            <td>{{ product.assigned_qty|default:0 }}</td>
+                            <td>{{ product.quantity|default:0|subtract:product.assigned_qty|default:0 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Подключаем Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // График по категориям
@@ -65,19 +138,78 @@
         data: {
             labels: [{% for cat in categories_stats %}'{{ cat.category__name }}'{% if not forloop.last %},{% endif %}{% endfor %}],
             datasets: [{
-                label: 'Количество позиций',
-                data: [{% for cat in categories_stats %}{{ cat.total }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                label: 'Всего (шт.)',
+                data: [{% for cat in categories_stats %}{{ cat.total_qty }}{% if not forloop.last %},{% endif %}{% endfor %}],
                 backgroundColor: 'rgba(54, 162, 235, 0.6)'
             }, {
-                label: 'Общее количество',
-                data: [{% for cat in categories_stats %}{{ cat.total_qty }}{% if not forloop.last %},{% endif %}{% endfor %}],
-                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                label: 'Закреплено (шт.)',
+                data: [{% for cat in categories_stats %}{{ cat.assigned_qty|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(255, 99, 132, 0.6)'
             }]
         },
         options: {
             responsive: true,
             scales: {
                 y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    // Круговая диаграмма статусов
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Доступно (ед.)', 'Закреплено (ед.)'],
+            datasets: [{
+                data: [{{ available_items }}, {{ assigned_items }}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(255, 159, 64, 0.6)'
+                ]
+            }]
+        }
+    });
+    
+    // График динамики
+    const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+    new Chart(timelineCtx, {
+        type: 'line',
+        data: {
+            labels: [{% for day in date_stats %}'{{ day.date }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Выдано (шт.)',
+                data: [{% for day in date_stats %}{{ day.assigned_qty }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                tension: 0.1
+            }, {
+                label: 'Возвращено (шт.)',
+                data: [{% for day in date_stats %}{{ day.returned_qty }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                borderColor: 'rgba(54, 162, 235, 1)',
+                tension: 0.1
+            }]
+        }
+    });
+    
+    // График по кабинетам
+    const roomsCtx = document.getElementById('roomsChart').getContext('2d');
+    new Chart(roomsCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for room in rooms_stats %}'{{ room.office }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Количество оборудования (шт.)',
+                data: [{% for room in rooms_stats %}{{ room.total_quantity }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(153, 102, 255, 0.6)'
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            scales: {
+                x: {
                     beginAtZero: true
                 }
             }
