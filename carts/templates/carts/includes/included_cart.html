@@ -16,9 +16,11 @@
                     <label for="userPosition" class="form-label">Должность:</label>
                     <select class="form-select" id="userPosition" required>
                         <option value="" selected disabled>Выберите должность</option>
-                        <option value="Сотрудник">Сотрудник</option>
-                        <option value="Лаборант">Лаборант</option>
-                        <option value="Студент">Студент</option>
+                        <option value="Доцент">Доцент</option>
+                        <option value="Профессор">Профессор</option>
+                        <option value="Старший преподаватель">Старший преподаватель</option>
+                        <option value="Техник">Техник</option>
+                        <option value="Ассистент">Ассистент</option>
                     </select>
                 </div>
             </div>
@@ -80,7 +82,9 @@
                             <div class="col p-0">
                                 <select class="form-select condition-select" data-cart-id="{{ cart.id }}" required>
                                     <option value="" selected disabled>Выберите состояние</option>
-                                    <option value="Исправно">Исправно</option>
+                                    <option value="Отличное">Отличное</option>
+                                    <option value="Хорошее">Хорошее</option>
+                                    <option value="Удовлетворительное">Удовлетворительное</option>
                                     <option value="Нужен ремонт">Нужен ремонт</option>
                                     <option value="Неисправно">Неисправно</option>
                                 </select>
