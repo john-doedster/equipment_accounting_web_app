@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4 text-white">
+    <h1 class="mb-4">Статистика оборудования</h1>
+    
+    <!-- Основные карточки -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Всего позиций</h5>
+                    <p class="card-text display-4">{{ total }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Общее количество</h5>
+                    <p class="card-text display-4">{{ total_quantity }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Графики -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Распределение по категориям</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="categoriesChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Топ оборудования по количеству</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        {% for product in popular_products %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ product.name }}
+                            <span class="badge bg-primary rounded-pill">{{ product.quantity }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // График по категориям
+    const categoriesCtx = document.getElementById('categoriesChart').getContext('2d');
+    new Chart(categoriesCtx, {
+        type: 'bar',
+        data: {
+            labels: [{% for cat in categories_stats %}'{{ cat.category__name }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+            datasets: [{
+                label: 'Количество позиций',
+                data: [{% for cat in categories_stats %}{{ cat.total }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)'
+            }, {
+                label: 'Общее количество',
+                data: [{% for cat in categories_stats %}{{ cat.total_qty }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.6)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
