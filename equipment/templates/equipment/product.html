@@ -91,6 +91,20 @@
     .qr-block p {
         margin-top: 5px;
         font-size: 0.8rem;
+
+
+    .qr-section {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 15px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    #qr-data {
+        border-left: 3px solid #0d6efd;
+        font-size: 0.9rem;
+    }    
     }
 
 </style>
@@ -121,7 +135,7 @@
         <h5 class="card-title product-title">{{ product.name }}</h5>
         <p class="card-text product-text">{{ product.description }}</p>
         
-        {# Обновленный блок QR-кода #}
+        {# Блок с QR-кодом в прежнем стиле #}
         <div class="d-flex justify-content-between align-items-center mt-3">
             <a href="{% url 'cart:cart_add' %}" 
                class="btn btn-dark add-to-cart-btn add-to-cart"
@@ -130,16 +144,24 @@
                 Добавить в список
             </a>
             
-            <div class="qr-block text-end ms-3">
+            <div class="qr-block text-end" style="margin-left: 20px;">
                 <img src="{{ qr_code }}" 
                      alt="QR-код {{ product.name }}" 
                      class="img-thumbnail" 
                      style="width: 120px; height: 120px;">
-                <p class="mt-1 small fw-bold text-primary">Наведите камеру →</p>
+                <p class="mt-1 small text-muted">Наведите камеру</p>
+                
+                <!-- Блок с информацией на русском -->
+                <div id="qr-basic-info" class="text-start" style="display: none; margin-top: 8px;">
+                    <p class="mb-1 small"><strong>ИД:</strong> <span id="qr-id">{{ product.id }}</span></p>
+                    <p class="mb-1 small"><strong>Название:</strong> <span id="qr-name">{{ product.name }}</span></p>
+                    <p class="mb-0 small"><strong>Количество:</strong> <span id="qr-quantity">{{ product.quantity }}</span> шт.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Модальное окно для увеличенного изображения -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
@@ -173,6 +195,29 @@ document.addEventListener('DOMContentLoaded', function() {
     if ('ontouchstart' in window) {
         imageModal.style.touchAction = 'manipulation';
     }
+
+    // Проверяем, была ли страница открыта через QR-код
+if(window.location.hash === '#qr-scanned') {
+    document.getElementById('qr-basic-info').style.display = 'block';
+}
+    
+    // Заполняем данные
+    document.getElementById('qr-id').textContent = productData.id;
+    document.getElementById('qr-name').textContent = productData.name;
+    document.getElementById('qr-quantity').textContent = productData.quantity;
+    
+    // Показываем блок с информацией
+    document.getElementById('qr-data').style.display = 'block';
+    
+    // Плавная прокрутка к данным
+    setTimeout(() => {
+        document.getElementById('qr-data').scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+        });
+    }, 300);
+}
+
 });
 </script>
 
