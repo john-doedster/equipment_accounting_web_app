@@ -117,16 +117,6 @@
         text-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
     }
 
-    /* Цена продукта */
-    .card-text {
-        color: #ffffff;
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin: 0.5rem 0;
-        text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-        position: relative;
-    }
-
     .card-text::after {
         content: '';
         position: absolute;
@@ -136,7 +126,7 @@
         height: 1px;
         background: linear-gradient(90deg, 
             transparent, 
-            rgba(255, 255, 255, 0.7), 
+            rgba(255, 255, 255, 0.9), 
             transparent);
     }
 
@@ -225,73 +215,4 @@
         100% { text-shadow: 0 0 5px rgba(94, 234, 212, 0.5); }
     }
 
-    /* Модальное окно */
-    .modal-content {
-        background-color: rgba(15, 23, 42, 0.95);
-        border: 1px solid rgba(94, 234, 212, 0.3);
-        color: white;
-    }
-
-    .modal-header {
-        border-bottom: 1px solid rgba(94, 234, 212, 0.2);
-    }
-
-    .btn-close {
-        filter: invert(1);
-    }
     
-    /* Стили для модального окна с изображением */
-    .modal-image-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        padding: 20px;
-    }
-    
-    .modal-image {
-        max-width: 100%;
-        max-height: 80vh;
-        object-fit: contain;
-        border-radius: 8px;
-        box-shadow: 0 0 20px rgba(94, 234, 212, 0.3);
-    }
-    
-    .modal-close-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(94, 234, 212, 0.4);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 1050;
-        transition: all 0.3s ease;
-    }
-    
-    .modal-close-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: rotate(90deg);
-    }
-    
-    .modal-close-btn::before,
-    .modal-close-btn::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 2px;
-        background-color: #5eead4;
-    }
-    
-    .modal-close-btn::before {
-        transform: rotate(45deg);
-    }
-    
-    .modal-close-btn::after {
-        transform: rotate(-45deg);
-    }
