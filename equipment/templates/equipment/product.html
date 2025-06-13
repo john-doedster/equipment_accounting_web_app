@@ -137,9 +137,9 @@
         
         {# Блок с QR-кодом в прежнем стиле #}
         <div class="d-flex justify-content-between align-items-center mt-3">
-            <a href="{% url 'cart:cart_add' %}" 
-               class="btn btn-dark add-to-cart-btn add-to-cart"
-               data-product-id="{{ product.id }}">
+            <a href="{% url 'cart:cart_add' %}?modal=true" 
+            class="btn btn-dark add-to-cart-btn add-to-cart"
+            data-product-id="{{ product.id }}">
                 {% csrf_token %}
                 Добавить в список
             </a>

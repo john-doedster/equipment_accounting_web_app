@@ -8,48 +8,66 @@ from carts.utils import get_user_carts
 from equipment.models import Products
 
 def cart_add(request):
-    product_id = request.POST.get("product_id")
-    product = Products.objects.get(id=product_id)
-    
-    if request.user.is_authenticated:
-        carts = Cart.objects.filter(user=request.user, product=product)
-        if carts.exists():
-            cart = carts.first()
-            if cart:
-                cart.quantity += 1
-                cart.save()
-        else:
-            Cart.objects.create(user=request.user, product=product, quantity=1)
-    else:
-        carts = Cart.objects.filter(session_key=request.session.session_key, product=product)
-        if carts.exists():
-            cart = carts.first()
-            if cart:
-                cart.quantity += 1
-                cart.save()
-        else:
-            Cart.objects.create(session_key=request.session.session_key, product=product, quantity=1)
+    try:
+        product_id = request.POST.get("product_id")
+        if not product_id:
+            return JsonResponse({"error": "Product ID is required"}, status=400)
 
-    user_cart = get_user_carts(request)
-    
-    # Определяем какой шаблон использовать
-    if request.GET.get('modal') == 'true':
-        template = "carts/includes/included_cart_modal.html"
-    else:
-        template = "carts/includes/included_cart.html"
-    
-    cart_items_html = render_to_string(
-        template, {
+        product = Products.objects.get(id=product_id)
+        
+        if request.user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(
+                user=request.user,
+                product=product,
+                defaults={'quantity': 1}
+            )
+            if not created:
+                cart.quantity += 1
+                cart.save()
+        else:
+            if not request.session.session_key:
+                request.session.create()
+            cart, created = Cart.objects.get_or_create(
+                session_key=request.session.session_key,
+                product=product,
+                defaults={'quantity': 1}
+            )
+            if not created:
+                cart.quantity += 1
+                cart.save()
+
+        user_cart = get_user_carts(request)
+        
+        # Генерируем оба варианта HTML
+        context = {
             "carts": user_cart,
             "title": "Список оборудования"
-        }, request=request)
+        }
+        
+        cart_items_html = render_to_string(
+            "carts/includes/included_cart.html", 
+            context, 
+            request=request
+        )
+        
+        modal_html = render_to_string(
+            "carts/includes/included_cart_modal.html", 
+            context, 
+            request=request
+        )
 
-    response_data = {
-        "message": "Оборудование добавлено в список",
-        "cart_items_html": cart_items_html,
-        "cart_total_quantity": user_cart.total_quantity()
-    }
-    return JsonResponse(response_data)
+        response_data = {
+            "message": "Оборудование добавлено в список",
+            "cart_items_html": cart_items_html,
+            "modal_html": modal_html,
+            "cart_total_quantity": user_cart.total_quantity()
+        }
+        return JsonResponse(response_data)
+
+    except Products.DoesNotExist:
+        return JsonResponse({"error": "Product not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 def cart_change(request):
     cart_id = request.POST.get("cart_id")
