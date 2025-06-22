@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block modal_cart %}
+{% comment %} {% block modal_cart %}
 {% include "includes/cart_button.html" %}
-{% endblock modal_cart %}
+{% endblock modal_cart %} {% endcomment %}
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'deps/css/neon-auth.css' %}">
 <link rel="stylesheet" href="{% static 'deps/css/neon_contacts.css' %}">
 <link rel="stylesheet" href="{% static 'deps/css/my_css.css' %}">
+
 {% endblock %}
 
 {% block content %}

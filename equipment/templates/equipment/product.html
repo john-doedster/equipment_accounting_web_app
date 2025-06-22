@@ -165,29 +165,43 @@
 
 <!-- Модальное окно для увеличенного изображения -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content bg-transparent border-0">
-            <div class="modal-header border-0" style="position: absolute; top: 10px; right: 10px; z-index: 1;">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-image-container text-center">
-                <img src="{{ product.image.url }}" 
-                     class="modal-image img-fluid" 
-                     alt="Увеличенное изображение {{ product.name }}"
-                     style="max-height: 80vh; width: auto;">
+            <div class="modal-body text-center">
+                <img src="{{ product.image.url }}" class="img-fluid" alt="Увеличенное изображение">
             </div>
         </div>
     </div>
 </div>
 
 <script>
-// Обработчик для модального окна изображения
-document.addEventListener('DOMContentLoaded', function() {  
+document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация модального окна
+    var imageModalEl = document.getElementById('imageModal');
+    var imageModal = new bootstrap.Modal(imageModalEl);
+    
     // Закрытие по ESC
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            const modal = bootstrap.Modal.getInstance(imageModal);
-            modal.hide();
+        if (e.key === 'Escape' && imageModalEl.classList.contains('show')) {
+            imageModal.hide();
+        }
+    });
+
+    // Явное закрытие по крестику
+    var closeButton = imageModalEl.querySelector('.btn-close');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            imageModal.hide();
+        });
+    }
+
+    // Закрытие по клику на затемненную область вокруг
+    imageModalEl.addEventListener('click', function(e) {
+        if (e.target === this) {
+            imageModal.hide();
         }
     });
     
@@ -196,10 +210,10 @@ document.addEventListener('DOMContentLoaded', function() {
         imageModal.style.touchAction = 'manipulation';
     }
 
-    // Проверяем, была ли страница открыта через QR-код
-if(window.location.hash === '#qr-scanned') {
-    document.getElementById('qr-basic-info').style.display = 'block';
-}
+        // Проверяем, была ли страница открыта через QR-код
+    if(window.location.hash === '#qr-scanned') {
+        document.getElementById('qr-basic-info').style.display = 'block';
+    }
     
     // Заполняем данные
     document.getElementById('qr-id').textContent = productData.id;

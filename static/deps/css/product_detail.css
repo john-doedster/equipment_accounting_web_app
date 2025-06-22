@@ -240,58 +240,57 @@
         filter: invert(1);
     }
     
-    /* Стили для модального окна с изображением */
-    .modal-image-container {
+    /* Модальное окно изображения - исправленные стили */
+    #imageModal .modal-dialog {
+        max-width: 95vw;
+        margin: 1.75rem auto;
         display: flex;
-        justify-content: center;
         align-items: center;
-        height: 100%;
-        padding: 20px;
+        min-height: calc(100% - 3.5rem);
     }
-    
-    .modal-image {
-        max-width: 100%;
+
+    #imageModal .modal-content {
+        background-color: transparent;
+        border: none;
+    }
+
+    #imageModal .modal-body {
+        padding: 0;
+        text-align: center;
+    }
+
+    #imageModal .modal-header {
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: none;
+        z-index: 1;
+        padding: 0.5rem;
+    }
+
+    #imageModal .btn-close {
+        filter: invert(1);
+        opacity: 0.8;
+        transition: opacity 0.2s ease;
+        background-size: 50%;
+        background-position: center;
+    }
+
+    #imageModal .btn-close:hover {
+        opacity: 1;
+    }
+
+    #imageModal img {
         max-height: 80vh;
+        max-width: 100%;
         object-fit: contain;
-        border-radius: 8px;
-        box-shadow: 0 0 20px rgba(94, 234, 212, 0.3);
     }
-    
-    .modal-close-btn {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: rgba(15, 23, 42, 0.7);
-        border: 1px solid rgba(94, 234, 212, 0.4);
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 1050;
-        transition: all 0.3s ease;
+
+    /* Убедитесь, что модальное окно поверх всех элементов */
+    .modal {
+        z-index: 1060 !important;
     }
-    
-    .modal-close-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
-        transform: rotate(90deg);
-    }
-    
-    .modal-close-btn::before,
-    .modal-close-btn::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 2px;
-        background-color: #5eead4;
-    }
-    
-    .modal-close-btn::before {
-        transform: rotate(45deg);
-    }
-    
-    .modal-close-btn::after {
-        transform: rotate(-45deg);
+
+    .modal-backdrop {
+        z-index: 1050 !important;
     }
