@@ -46,14 +46,16 @@
                             </ul>
                         </li>
                         {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Список</a>
-                        </li>
-
+                        
                         
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{% url 'stats:equipment_stats' %}">Статистика</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Список</a>
+                        </li>
+
 
 
                         <li class="nav-item">

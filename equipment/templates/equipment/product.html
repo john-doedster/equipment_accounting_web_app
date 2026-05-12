@@ -108,6 +108,7 @@
     }
 
 </style>
+<link rel="stylesheet" href="{% static 'deps/css/cart_styles.css' %}">
 
 {% endblock css %}
 
@@ -169,6 +170,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0">
+            <div class="modal-header border-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
             <div class="modal-body text-center">
                 <img src="{{ product.image.url }}" class="img-fluid" alt="Увеличенное изображение">
