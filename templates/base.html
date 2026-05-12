@@ -45,15 +45,17 @@
                                 <li><a class="dropdown-item  text-white" href="{% url "main:about" %}">О приложении</a></li>
                             </ul>
                         </li>
+                        {% if user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{% url "user:users_cart" %}">Список</a>
                         </li>
 
+                        
                         <li class="nav-item">
                             <a class="nav-link  text-white" href="{% url 'stats:equipment_stats' %}">Статистика</a>
                         </li>
 
-                        {% if user.is_authenticated %}
+
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'table:device_list' %}">Учёт</a>
                         </li>
