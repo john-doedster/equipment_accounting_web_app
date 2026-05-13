@@ -6,16 +6,16 @@
 
 Возможности
 ====
-* Возможность создавать:
-* Производителя
-* Тип оборудования
-* Место расположение
-* Модель оборудования
-* Серийный номер
-* Статус оборудования
-* Редактировать добавленное оборудование
-* Выбирать оборудование из предложенного асортимента
-* Вести точный учёт оборудования
+Возможность создавать:
+    * Производителя
+    * Тип оборудования
+    * Место расположение
+    * Модель оборудования
+    * Серийный номер
+    * Статус оборудования
+    * Редактировать добавленное оборудование
+    * Выбирать оборудование из предложенного асортимента
+    * Вести точный учёт оборудования
 
 
 ## 🛠 Технологии
@@ -34,45 +34,22 @@
 - Установленный Git
 - PostgreSQL
 
-```bash:
-    1. Клонирование репозитория
-```bash:
-git clone https://github.com/IlyaPravilovIV121/django-web-app.git
-cd django-web-app
+## 🚀 Быстрый старт
 
-    2. Настройка виртуального окружения
-```bash:
-python -m venv venv
+```markdown
+# Django Web Application
 
-# Активация:
-# Linux/MacOS:
-source venv/bin/activate
+## 📦 Установка и запуск
 
-# Windows:
-.\venv\Scripts\activate
+| Шаг | Команда |
+|-----|---------|
+| 1️⃣ Клонирование | `git clone https://github.com/IlyaPravilovIV121/django-web-app.git` |
+| 2️⃣ Переход в папку | `cd django-web-app` |
+| 3️⃣ Создание venv | `python -m venv venv` |
+| 4️⃣ Активация venv (Win) | `venv\Scripts\activate` |
+| 4️⃣ Активация venv (Mac/Linux) | `source venv/bin/activate` |
+| 5️⃣ Установка зависимостей | `pip install -r requirements.txt` |
+| 6️⃣ Миграции | `python manage.py migrate` |
+| 7️⃣ Запуск | `python manage.py runserver` |
 
-    3.Установка зависимостей
-```bash:
-pip install -r requirements.txt
-
-    4. Настройка окружения
-Создайте файл .env на основе примера:
-
-```bash:
-cp .env.example .env
-Отредактируйте .env (укажите свои SECRET_KEY, настройки БД и др.)
-
-    5. Применение миграций
-```bash:
-python manage.py migrate
-
-    6. Создание суперпользователя (опционально)
-```bash:
-python manage.py createsuperuser
-
-    7. Запуск сервера
-```bash:
-python manage.py runserver
-
-    8. Перейти к приложению по адресу:
-http://127.0.0.1:8000
+🌐 **После запуска:** http://127.0.0.1:8000
