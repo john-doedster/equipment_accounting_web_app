@@ -2,7 +2,7 @@
 
 Учёт оборудования
 ===
-С помощью данного приложения можно вести учет оборудования на кафедре ВС. 
+С помощью данного приложения можно вести учет оборудования на кафедре ВС 
 
 Возможности
 ====
@@ -39,7 +39,7 @@
 
 | Шаг | Действие | Команда |
 |-----|----------|---------|
-| 1️⃣ | Клонирование | `git clone https://github.com/IlyaPravilovIV121/django-web-app.git` |
+| 1️⃣ | Клонирование | `git clone https://github.com/john-doedster/equipment_accounting_web_app.git` |
 | 2️⃣ | Переход в папку | `cd django-web-app` |
 | 3️⃣ | Создание venv | `python -m venv venv` |
 | 4️⃣ | Активация venv (Win) | `venv\Scripts\activate` |
