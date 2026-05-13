@@ -7,15 +7,15 @@
 Возможности
 ====
 Возможность создавать:
-    * Производителя
-    * Тип оборудования
-    * Место расположение
-    * Модель оборудования
-    * Серийный номер
-    * Статус оборудования
-    * Редактировать добавленное оборудование
-    * Выбирать оборудование из предложенного асортимента
-    * Вести точный учёт оборудования
+* Производителя
+* Тип оборудования
+* Место расположение
+* Модель оборудования
+* Серийный номер
+* Статус оборудования
+* Редактировать добавленное оборудование
+* Выбирать оборудование из предложенного асортимента
+* Вести точный учёт оборудования
 
 
 ## 🛠 Технологии
@@ -39,17 +39,17 @@
 ```markdown
 # Django Web Application
 
-## 📦 Установка и запуск
+📦 Установка и запуск
 
-| Шаг | Команда |
-|-----|---------|
-| 1️⃣ Клонирование | `git clone https://github.com/IlyaPravilovIV121/django-web-app.git` |
-| 2️⃣ Переход в папку | `cd django-web-app` |
-| 3️⃣ Создание venv | `python -m venv venv` |
-| 4️⃣ Активация venv (Win) | `venv\Scripts\activate` |
-| 4️⃣ Активация venv (Mac/Linux) | `source venv/bin/activate` |
-| 5️⃣ Установка зависимостей | `pip install -r requirements.txt` |
-| 6️⃣ Миграции | `python manage.py migrate` |
-| 7️⃣ Запуск | `python manage.py runserver` |
+| Шаг | Команда 
+|-----|--------|
+| 1️⃣ | Клонирование | `git clone https://github.com/IlyaPravilovIV121/django-web-app.git` |
+| 2️⃣ |Переход в папку | `cd django-web-app` |
+| 3️⃣ |Создание venv | `python -m venv venv` |
+| 4️⃣ |Активация venv (Win) | `venv\Scripts\activate` |
+| 4️⃣ |Активация venv (Mac/Linux) | `source venv/bin/activate` |
+| 5️⃣ |Установка зависимостей | `pip install -r requirements.txt` |
+| 6️⃣ |Миграции | `python manage.py migrate` |
+| 7️⃣ |Запуск | `python manage.py runserver` |
 
 🌐 **После запуска:** http://127.0.0.1:8000
