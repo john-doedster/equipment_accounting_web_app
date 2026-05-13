@@ -36,7 +36,6 @@
 
 ## 🚀 Быстрый старт
 
-```markdown
 # Django Web Application
 
 📦 Установка и запуск
