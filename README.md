@@ -1,5 +1,6 @@
 # Django Web Application for equipment accounting
 
+Для чего
 ===
 С помощью данного приложения можно вести учет оборудования на кафедре ВС 
 
